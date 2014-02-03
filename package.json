@@ -1,0 +1,52 @@
+{
+  "name": "gulp-awspublish",
+  "version": "0.0.1",
+  "description": "A plugin for Gulp",
+  "keywords": [
+    "gulpplugin",
+    "aws",
+    "s3",
+    "publish"
+  ],
+  "homepage": "https://github.com/pgherveou/gulp-awspublish",
+  "bugs": "https://github.com/pgherveou/gulp-awspublish/issues",
+  "author": {
+    "name": "PG Herveou",
+    "email": "pg@jogabo.com",
+    "url": "https://github.com/pgherveou"
+  },
+  "main": "./lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pgherveou/gulp-awspublish.git"
+  },
+  "scripts": {
+    "test": "istanbul test _mocha --report html -- test/*.js --reporter spec",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "dependencies": {
+    "through2": "0.x",
+    "gulp-util": "2.x",
+    "knox": "0.x",
+    "mime": "1.x",
+    "clone": "0.x",
+    "pad-component": "0.x"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "coveralls": "*",
+    "mocha-lcov-reporter": "*",
+    "istanbul": "*",
+    "event-stream": "*",
+    "chai": "*"
+  },
+  "engines": {
+    "node": ">=0.8.0",
+    "npm": ">=1.2.10"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ]
+}

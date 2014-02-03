@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+temp/
+coverage
+aws-credentials.json
