@@ -31,12 +31,13 @@ var jsgz = gulp.src('./public/*.js')
   .pipe(awspublish.gzip())
   .pipe(publisher.publish(headers));
 
-// sync content of s3 bucket with published files
+// sync content of s3 bucket with listing of published files
+// cache s3 etags to avoid unnecessary request next time
 // print progress with reportr
 publisher
-  .sync(es.merge(js, jsgz))
+  .sync(es.merge(js, jsgz)))
+  .pipe(awspublish.cache())
   .pipe(publisher.reporter());
-
 
 ```
 
@@ -45,6 +46,11 @@ publisher
 ### awspublish.gzip()
 
  create a gzip through stream, that gzip files and add Content-Encoding headers
+
+### awspublish.cache()
+
+ through stream that create or update an .awspublish cache file with the list
+ of key value pair (s3.path/s3.etag)
 
 ### awspublish.create(options)
 
@@ -56,10 +62,19 @@ Options are passed to knox to create a s3 client
 create a through stream, that push files to s3.
 Publish take a header hash as argument to override or add other s3 headers.
 
+if there is an .awspublish cache file, we first check against it to see
+if the file is in the cache we dont upload the file,
+and file.s3.state is set to 'cache'
+
+we then make a header query and compare the remote etag with the local one
+if etag5 match we don't upload the file and file.s3.state is set to 'skip'
+
+if there is a remote file.s3.state is set to 'update'
+otherwhise file.s3.state is set to 'create'
 
 Files that get out of the stream get extra properties
   s3.path: s3 path of this file
-  s3.state: publish state (add, update or skip)
+  s3.state: publish state (create, update, cache or skip)
   s3.headers: s3 headers for this file
 
 Defaults headers are

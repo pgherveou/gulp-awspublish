@@ -21,8 +21,9 @@ describe('gulp-awspublish', function () {
   var credentials = fs.readFileSync('aws-credentials.json', 'utf8'),
       publisher = awspublish.create(JSON.parse(credentials));
 
-  // remove or test file
+  // remove files
   before(function(done) {
+    try { fs.unlinkSync('.awspublish'); } catch (err) {}
     publisher.client.deleteMultiple(['/test/hello.txt'], done);
   });
 
@@ -71,7 +72,7 @@ describe('gulp-awspublish', function () {
     gzipStream.end();
   });
 
-  it('should add new file on s3 with headers', function (done) {
+  it('should create new file on s3 with headers', function (done) {
 
     var headers = {
       'Cache-Control': 'max-age=315360000, no-transform, public'
@@ -89,7 +90,7 @@ describe('gulp-awspublish', function () {
         expect(err).not.to.exist;
         expect(files).to.have.length(1);
         expect(files[0].s3.path).to.eq('/test/hello.txt');
-        expect(files[0].s3.state).to.eq('add');
+        expect(files[0].s3.state).to.eq('create');
         expect(files[0].s3.headers['Cache-Control']).to.eq(headers['Cache-Control']);
         expect(files[0].s3.headers['x-amz-acl']).to.eq('public-read');
         expect(files[0].s3.headers['Content-Type']).to.eq('text/plain');
@@ -121,12 +122,51 @@ describe('gulp-awspublish', function () {
     stream.end();
   });
 
-  it('should skip identical file', function (done) {
+  it('should skip file update', function (done) {
     var stream = publisher.publish();
     stream.pipe(es.writeArray(function(err, files) {
       expect(err).not.to.exist;
       expect(files).to.have.length(1);
       expect(files[0].s3.state).to.eq('skip');
+      done(err);
+    }));
+
+    stream.write(new gutil.File({
+      path: '/test/hello.txt',
+      base: '/',
+      contents: new Buffer('hello world 2')
+    }));
+
+    stream.end();
+  });
+
+  it('should add cache file', function (done) {
+    expect(fs.existsSync('.awspublish')).to.be.false;
+
+    var stream = publisher.publish(),
+        cache = stream.pipe(awspublish.cache());
+
+    stream.write(new gutil.File({
+      path: '/test/hello.txt',
+      base: '/',
+      contents: new Buffer('hello world 2')
+    }));
+
+    cache.on('finish', function() {
+      var cache = JSON.parse(fs.readFileSync('.awspublish', 'utf8'));
+      expect(cache).to.have.ownProperty('/test/hello.txt');
+      done();
+    });
+
+    stream.end();
+  });
+
+  it('should mark file as cached', function (done) {
+    var stream = publisher.publish();
+    stream.pipe(es.writeArray(function(err, files) {
+      expect(err).not.to.exist;
+      expect(files).to.have.length(1);
+      expect(files[0].s3.state).to.eq('cache');
       done(err);
     }));
 
@@ -152,7 +192,7 @@ describe('gulp-awspublish', function () {
           return file.s3.path;
         }).sort().join(' ');
 
-        expect(deleted).to.eq('boum.txt foo.txt');
+        expect(deleted).to.eq('boum.txt foo.txt test/hello.txt');
         done(err);
       }));
 
