@@ -45,11 +45,11 @@ publisher
 
 ### awspublish.gzip()
 
- create a gzip through stream, that gzip files and add Content-Encoding headers
+ create a through stream, that gzip files and add Content-Encoding headers
 
 ### awspublish.cache()
 
- through stream that create or update an .awspublish cache file with the list
+ create a through stream that create or update an .awspublish cache file with the list
  of key value pair (s3.path/s3.etag)
 
 ### awspublish.create(options)
@@ -63,7 +63,7 @@ create a through stream, that push files to s3.
 Publish take a header hash that add or override existing s3 headers.
 
 if there is an .awspublish cache file, we first compare disk file etag
-with the one in the cache, if etags match we dont request amazon 
+with the one in the cache, if etags match we dont query amazon 
 and file.s3.state is set to 'cache'
 
 we then make a header query and compare the remote etag with the local one
@@ -101,11 +101,6 @@ deleted file will have s3.state set to delete
 [npm-url]: https://npmjs.org/package/gulp-awspublish
 [npm-image]: https://badge.fury.io/js/gulp-awspublish.png
 
-[travis-url]: http://travis-ci.org/pgherveou/gulp-awspublish
-[travis-image]: https://secure.travis-ci.org/pgherveou/gulp-awspublish.png?branch=master
-
-[coveralls-url]: https://coveralls.io/r/pgherveou/gulp-awspublish
-[coveralls-image]: https://coveralls.io/repos/pgherveou/gulp-awspublish/badge.png
 
 [depstat-url]: https://david-dm.org/pgherveou/gulp-awspublish
 [depstat-image]: https://david-dm.org/pgherveou/gulp-awspublish.png
