@@ -42,6 +42,19 @@ publisher
 
 ```
 
+## Testing
+
+add an aws-credentials.json json file to the project directory
+with your bucket credentials, then run mocha.
+
+```json
+ {
+  "key": "...",
+  "secret": "...",
+  "bucket": "..."
+}
+```
+
 ## API
 
 ### awspublish.gzip()
@@ -64,7 +77,7 @@ create a through stream, that push files to s3.
 Publish take a header hash that add or override existing s3 headers.
 
 if there is an .awspublish cache file, we first compare disk file etag
-with the one in the cache, if etags match we dont query amazon 
+with the one in the cache, if etags match we dont query amazon
 and file.s3.state is set to 'cache'
 
 we then make a header query and compare the remote etag with the local one
@@ -74,7 +87,7 @@ if there is a remote file.s3.state is set to 'update'
 otherwhise file.s3.state is set to 'create'
 
 Files that go through the stream get extra properties
-  s3.path: s3 path 
+  s3.path: s3 path
   s3.etag: file etag
   s3.state: publication state (create, update, cache or skip)
   s3.headers: s3 headers for this file
@@ -92,7 +105,7 @@ deleted file will have s3.state set to delete
 
 ### awspublish.reporter()
 
- create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip) 
+ create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip)
 
 
 ## License
