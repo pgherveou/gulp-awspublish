@@ -20,7 +20,8 @@ var es = require('event-stream'),
     headers = { 'Cache-Control': 'max-age=315360000, no-transform, public' };
 
 // publish all js files
-// Cache-Control headers will be added on top of other headers
+// Set Content-Length, Content-Type and Cache-Control headers
+// Set x-amz-acl to public-read by default
 var js = gulp.src('./public/*.js')
   .pipe(publisher.publish(headers));
 
@@ -30,9 +31,9 @@ var jsgz = gulp.src('./public/*.js')
   .pipe(awspublish.gzip())
   .pipe(publisher.publish(headers));
 
-// sync content of s3 bucket with listing of published files
-// cache s3 etags to avoid unnecessary request next time
-// print progress with reportr
+// sync content of s3 bucket with files in the stream
+// cache s3 etags locally to avoid unnecessary request next time
+// print progress with reporter
 publisher
   .sync(es.merge(js, jsgz)))
   .pipe(awspublish.cache())
