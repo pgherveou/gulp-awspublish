@@ -19,11 +19,13 @@ describe('gulp-awspublish', function () {
   this.timeout(5000);
 
   var credentials = fs.readFileSync('aws-credentials.json', 'utf8'),
-      publisher = awspublish.create(JSON.parse(credentials));
+      publisher = awspublish.create(JSON.parse(credentials)),
+      cacheFile = '.awspublish-' + publisher.client.bucket;
 
   // remove files
   before(function(done) {
-    try { fs.unlinkSync('.awspublish'); } catch (err) {}
+    try { fs.unlinkSync(cacheFile); } catch (err) {}
+    publisher._cache = {};
     publisher.client.deleteMultiple([
       '/test/hello.txt',
       '/test/hello2.txt',
@@ -162,10 +164,8 @@ describe('gulp-awspublish', function () {
     });
 
     it('should add cache file', function (done) {
-      expect(fs.existsSync('.awspublish')).to.be.false;
-
       var stream = publisher.publish(),
-          cache = stream.pipe(awspublish.cache());
+          cache = stream.pipe(publisher.cache());
 
       stream.write(new gutil.File({
         path: '/test/hello.txt',
@@ -174,8 +174,7 @@ describe('gulp-awspublish', function () {
       }));
 
       cache.on('finish', function() {
-        var cache = JSON.parse(fs.readFileSync('.awspublish', 'utf8'));
-        expect(cache).to.have.ownProperty('/test/hello.txt');
+        expect(publisher._cache).to.have.ownProperty('/test/hello.txt');
         done();
       });
 

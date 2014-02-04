@@ -37,7 +37,7 @@ var jsgz = gulp.src('./public/*.js')
 // print progress with reporter
 publisher
   .sync(es.merge(js, jsgz)))
-  .pipe(awspublish.cache())
+  .pipe(publisher.cache())
   .pipe(publisher.reporter());
 
 ```
@@ -60,11 +60,6 @@ with your bucket credentials, then run mocha.
 ### awspublish.gzip()
 
  create a through stream, that gzip files and add Content-Encoding headers
-
-### awspublish.cache()
-
- create a through stream that create or update an .awspublish cache file with the list
- of key value pair (s3.path/s3.etag)
 
 ### awspublish.create(options)
 
@@ -96,6 +91,14 @@ Defaults headers are
   - x-amz-acl (default to public-read)
   - Content-Type
   - Content-Length
+
+### publisher.cache()
+
+ create a through stream that create or update a cache file with the list
+ of key value pair (s3.path/s3.etag)
+
+ Cache file is save in the current working dir and is named.awspublish-<bucket>
+ The cache file is flushed to disk every 10 files
 
 #### Publisher.sync(stream)
 
