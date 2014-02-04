@@ -26,6 +26,7 @@ describe('gulp-awspublish', function () {
     try { fs.unlinkSync('.awspublish'); } catch (err) {}
     publisher.client.deleteMultiple([
       '/test/hello.txt',
+      '/test/hello2.txt',
       '/test/hello.txtgz'
     ], done);
   });
@@ -99,10 +100,16 @@ describe('gulp-awspublish', function () {
         contents: new Buffer('hello world')
       }));
 
+      stream.write(new gutil.File({
+        path: '/test/hello2.txt',
+        base: '/',
+        contents: new Buffer('hello world')
+      }));
+
       stream
         .pipe(es.writeArray(function(err, files) {
           expect(err).not.to.exist;
-          expect(files).to.have.length(1);
+          expect(files).to.have.length(2);
           expect(files[0].s3.path).to.eq('/test/hello.txt');
           expect(files[0].s3.state).to.eq('create');
           expect(files[0].s3.headers['Cache-Control']).to.eq(headers['Cache-Control']);
@@ -201,6 +208,7 @@ describe('gulp-awspublish', function () {
     before(function(done) {
       publisher.client.deleteMultiple([
         '/test/hello.txt',
+        '/test/hello2.txt',
         '/test/hello.txtgz'
       ], done);
     });

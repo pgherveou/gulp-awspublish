@@ -103,6 +103,10 @@ Take a stream of files and sync the content of the s3 bucket with these files.
 It return a readable stream with both input files and deleted files
 deleted file will have s3.state set to delete
 
+#### Publisher.client
+
+The knox client is exposed to let you do other s3 operations
+
 ### awspublish.reporter()
 
  create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip)
