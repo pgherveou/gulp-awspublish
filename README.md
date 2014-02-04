@@ -27,6 +27,7 @@ var js = gulp.src('./public/*.js')
 
 // gzip and publish all js files
 // Content-Encoding headers will be added on top of other headers
+// uploaded files will have a jsgz extension
 var jsgz = gulp.src('./public/*.js')
   .pipe(awspublish.gzip())
   .pipe(publisher.publish(headers));
