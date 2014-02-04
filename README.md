@@ -1,4 +1,3 @@
-
 # gulp-awspublish
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]  [![Coverage Status](coveralls-image)](coveralls-url) [![Dependency Status][depstat-image]][depstat-url]
 
@@ -60,21 +59,22 @@ Options are passed to knox to create a s3 client
 #### Publisher.publish(headers)
 
 create a through stream, that push files to s3.
-Publish take a header hash as argument to override or add other s3 headers.
+Publish take a header hash that add or override existing s3 headers.
 
-if there is an .awspublish cache file, we first check against it to see
-if the file is in the cache we dont upload the file,
+if there is an .awspublish cache file, we first compare disk file etag
+with the one in the cache, if etags match we dont request amazon 
 and file.s3.state is set to 'cache'
 
 we then make a header query and compare the remote etag with the local one
-if etag5 match we don't upload the file and file.s3.state is set to 'skip'
+if etags match we don't upload the file and file.s3.state is set to 'skip'
 
 if there is a remote file.s3.state is set to 'update'
 otherwhise file.s3.state is set to 'create'
 
-Files that get out of the stream get extra properties
-  s3.path: s3 path of this file
-  s3.state: publish state (create, update, cache or skip)
+Files that go through the stream get extra properties
+  s3.path: s3 path 
+  s3.etag: file etag
+  s3.state: publication state (create, update, cache or skip)
   s3.headers: s3 headers for this file
 
 Defaults headers are
@@ -90,7 +90,7 @@ deleted file will have s3.state set to delete
 
 ### awspublish.reporter()
 
- create a reporter that logs to console each file state (delete, add, update, skip) and s3 path
+ create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip) 
 
 
 ## License
