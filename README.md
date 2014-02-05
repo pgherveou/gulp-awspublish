@@ -35,8 +35,8 @@ var jsgz = gulp.src('./public/*.js')
 // sync content of s3 bucket with files in the stream
 // cache s3 etags locally to avoid unnecessary request next time
 // print progress with reporter
-publisher
-  .sync(es.merge(js, jsgz)))
+es.merge(js, jsgz)
+  .pipe(publisher.sync())
   .pipe(publisher.cache())
   .pipe(publisher.reporter());
 
@@ -100,15 +100,15 @@ Defaults headers are
  Cache file is save in the current working dir and is named.awspublish-<bucket>
  The cache file is flushed to disk every 10 files
 
-#### Publisher.sync(stream)
+#### Publisher.sync()
 
-Take a stream of files and sync the content of the s3 bucket with these files.
-It return a readable stream with both input files and deleted files
+create a transform stream that delete old files from the bucket
+and stream both new and delete files.
 deleted file will have s3.state set to delete
 
 #### Publisher.client
 
-The knox client is exposed to let you do other s3 operations
+Expose the knox clientto let you do other s3 operations
 
 ### awspublish.reporter()
 

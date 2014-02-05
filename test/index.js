@@ -224,8 +224,8 @@ describe('gulp-awspublish', function () {
     it('should sync bucket with published data', function(done) {
       var stream = gutil.noop();
 
-      publisher
-        .sync(stream)
+      stream
+        .pipe(publisher.sync())
         .pipe(es.writeArray(function(err, arr) {
           expect(err).to.not.exist;
           var deleted = arr.filter(function (file) {

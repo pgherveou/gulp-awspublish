@@ -3,4 +3,4 @@ node_modules/
 temp/
 coverage
 aws-credentials.json
-.awspublish
+.awspublish-*
