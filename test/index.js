@@ -27,9 +27,9 @@ describe('gulp-awspublish', function () {
     try { fs.unlinkSync(cacheFile); } catch (err) {}
     publisher._cache = {};
     publisher.client.deleteMultiple([
-      '/test/hello.txt',
-      '/test/hello2.txt',
-      '/test/hello.txtgz'
+      'test/hello.txt',
+      'test/hello2.txt',
+      'test/hello.txtgz'
     ], done);
   });
 
@@ -51,7 +51,7 @@ describe('gulp-awspublish', function () {
           expect(files).to.have.length(1);
           expect(files[0]).to.not.eq(srcFile);
           expect(files[0].path).to.eq(srcFile.path + 'gz');
-          expect(files[0].s3.path).to.eq('/test/hello.txtgz');
+          expect(files[0].s3.path).to.eq('test/hello.txtgz');
           expect(files[0].s3.headers['Content-Encoding']).to.eq('gzip');
 
           // compare uncompressed to srcFile
@@ -80,7 +80,7 @@ describe('gulp-awspublish', function () {
         .pipe(es.writeArray(function(err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
-          publisher.client.headFile('/test/hello.txtgz', function(err, res) {
+          publisher.client.headFile('test/hello.txtgz', function(err, res) {
             expect(res.headers.etag).to.exist;
             done(err);
           });
@@ -112,7 +112,7 @@ describe('gulp-awspublish', function () {
         .pipe(es.writeArray(function(err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(2);
-          expect(files[0].s3.path).to.eq('/test/hello.txt');
+          expect(files[0].s3.path).to.eq('test/hello.txt');
           expect(files[0].s3.state).to.eq('create');
           expect(files[0].s3.headers['Cache-Control']).to.eq(headers['Cache-Control']);
           expect(files[0].s3.headers['x-amz-acl']).to.eq('public-read');
@@ -174,7 +174,7 @@ describe('gulp-awspublish', function () {
       }));
 
       cache.on('finish', function() {
-        expect(publisher._cache).to.have.ownProperty('/test/hello.txt');
+        expect(publisher._cache).to.have.ownProperty('test/hello.txt');
         done();
       });
 
@@ -206,9 +206,9 @@ describe('gulp-awspublish', function () {
     // remove files
     before(function(done) {
       publisher.client.deleteMultiple([
-        '/test/hello.txt',
-        '/test/hello2.txt',
-        '/test/hello.txtgz'
+        'test/hello.txt',
+        'test/hello2.txt',
+        'test/hello.txtgz'
       ], done);
     });
 
