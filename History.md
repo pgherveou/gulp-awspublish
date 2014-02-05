@@ -1,4 +1,9 @@
 
+0.0.5 / 2014-02-05
+==================
+
+ * update sync
+
 0.0.4 / 2014-02-04
 ==================
 
@@ -10,7 +15,6 @@
  * fix gz upload
  * update logging padding
  * add cache feature
- * Update README.md
 
 0.0.1 / 2014-02-03
 ==================
