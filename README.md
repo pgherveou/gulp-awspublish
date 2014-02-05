@@ -92,7 +92,7 @@ Defaults headers are
   - Content-Type
   - Content-Length
 
-### publisher.cache()
+#### publisher.cache()
 
  create a through stream that create or update a cache file with the list
  of key value pair (s3.path/s3.etag)
