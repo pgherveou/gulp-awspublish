@@ -1,4 +1,10 @@
 
+0.0.7 / 2014-02-06
+==================
+
+ * sync refactoring
+ * add options to filter files on the log reporter
+
 0.0.6 / 2014-02-05
 ==================
 
