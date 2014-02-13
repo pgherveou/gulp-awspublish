@@ -38,7 +38,7 @@ var jsgz = gulp.src('./public/*.js')
 es.merge(js, jsgz)
   .pipe(publisher.sync())
   .pipe(publisher.cache())
-  .pipe(publisher.reporter());
+  .pipe(awspublish.reporter());
 
 ```
 
