@@ -16,7 +16,7 @@ Then, add it to your `gulpfile.js`:
 ```javascript
 var es = require('event-stream'),
     awspublish = require('gulp-awspublish'),
-    publisher = awspublish({ key: '...', secret: '...', bucket: '...'}),
+    publisher = awspublish.create({ key: '...', secret: '...', bucket: '...'}),
     headers = { 'Cache-Control': 'max-age=315360000, no-transform, public' };
 
 // publish all js files
