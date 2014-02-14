@@ -29,7 +29,7 @@ var js = gulp.src('./public/*.js')
 // Content-Encoding headers will be added on top of other headers
 // uploaded files will have a jsgz extension
 var jsgz = gulp.src('./public/*.js')
-  .pipe(awspublish.gzip())
+  .pipe(awspublish.gzip({ ext: '.gz' }))
   .pipe(publisher.publish(headers));
 
 // sync content of s3 bucket with files in the stream
