@@ -57,9 +57,11 @@ with your bucket credentials, then run mocha.
 
 ## API
 
-### awspublish.gzip()
+### awspublish.gzip(options)
 
  create a through stream, that gzip file and add Content-Encoding header
+ Available options:
+  - ext: file extension to add to gzipped file (eg: { ext: '.gz' })
 
 ### awspublish.create(options)
 
