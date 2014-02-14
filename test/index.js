@@ -37,7 +37,7 @@ describe('gulp-awspublish', function () {
 
     it('should produce gzip file with s3 headers', function (done) {
 
-      var gzip = awspublish.gzip();
+      var gzip = awspublish.gzip({ ext: '.gz' });
       var srcFile = new gutil.File({
         path: '/test/hello.txt',
         base: '/',
@@ -50,8 +50,8 @@ describe('gulp-awspublish', function () {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0]).to.not.eq(srcFile);
-          expect(files[0].path).to.eq(srcFile.path + 'gz');
-          expect(files[0].s3.path).to.eq('test/hello.txtgz');
+          expect(files[0].path).to.eq(srcFile.path + '.gz');
+          expect(files[0].s3.path).to.eq('test/hello.txt.gz');
           expect(files[0].s3.headers['Content-Encoding']).to.eq('gzip');
 
           // compare uncompressed to srcFile
@@ -67,7 +67,7 @@ describe('gulp-awspublish', function () {
     });
 
     it('should upload gzip file', function (done) {
-      var gzip = awspublish.gzip(),
+      var gzip = awspublish.gzip({ ext: '.gz' }),
           stream = gzip.pipe(publisher.publish());
 
       gzip.write(new gutil.File({
@@ -80,7 +80,7 @@ describe('gulp-awspublish', function () {
         .pipe(es.writeArray(function(err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
-          publisher.client.headFile('test/hello.txtgz', function(err, res) {
+          publisher.client.headFile('test/hello.txt.gz', function(err, res) {
             expect(res.headers.etag).to.exist;
             done(err);
           });
@@ -208,7 +208,7 @@ describe('gulp-awspublish', function () {
       publisher.client.deleteMultiple([
         'test/hello.txt',
         'test/hello2.txt',
-        'test/hello.txtgz'
+        'test/hello.txt.gz'
       ], done);
     });
 
