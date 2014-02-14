@@ -30,14 +30,14 @@
     "knox": "0.x",
     "mime": "1.x",
     "clone": "0.x",
-    "pad-component": "0.x"
+    "pad-component": "0.x",
+    "event-stream": "3.x"
   },
   "devDependencies": {
     "mocha": "*",
     "coveralls": "*",
     "mocha-lcov-reporter": "*",
     "istanbul": "*",
-    "event-stream": "*",
     "chai": "*"
   },
   "engines": {
