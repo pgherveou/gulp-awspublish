@@ -1,4 +1,9 @@
 
+0.0.11 / 2014-02-14
+==================
+
+ * Merge window fix, pull request #3 from jonathandelgado/patch-1
+
 0.0.10 / 2014-02-14
 ==================
 
