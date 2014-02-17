@@ -14,32 +14,28 @@ npm install --save-dev gulp-awspublish
 Then, add it to your `gulpfile.js`:
 
 ```javascript
-var es = require('event-stream'),
-    awspublish = require('gulp-awspublish'),
-    publisher = awspublish.create({ key: '...', secret: '...', bucket: '...'}),
-    headers = { 'Cache-Control': 'max-age=315360000, no-transform, public' };
+var awspublish = require('gulp-awspublish');
+var publisher = awspublish.create({ 
+  key: '...', 
+  secret: '...', 
+  bucket: '...'
+ });
 
-// publish all js files
+var headers = { 
+   'Cache-Control': 'max-age=315360000, no-transform, public' 
+   // ...
+ };
+
+// gzip and publish all js files (uploaded files will have a .gz extension)
 // Set Content-Length, Content-Type and Cache-Control headers
 // Set x-amz-acl to public-read by default
-var js = gulp.src('./public/*.js')
-  .pipe(publisher.publish(headers));
-
-// gzip and publish all js files
-// Content-Encoding headers will be added on top of other headers
-// uploaded files will have a .gz extension
+// Set Content-Encoding headers
 var jsgz = gulp.src('./public/*.js')
   .pipe(awspublish.gzip({ ext: '.gz' }))
   .pipe(publisher.publish(headers));
-
-// sync content of s3 bucket with files in the stream
-// cache s3 etags locally to avoid unnecessary request next time
-// print progress with reporter
-es.merge(js, jsgz)
-  .pipe(publisher.sync())
-  .pipe(publisher.cache())
-  .pipe(awspublish.reporter());
-
+  .pipe(publisher.sync())  // sync local directory with bucket
+  .pipe(publisher.cache()) // create a cache file to speed up next uploads
+  .pipe(awspublish.reporter()); // print upload updates to console
 ```
 
 ## Testing
