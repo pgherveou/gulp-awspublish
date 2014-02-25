@@ -69,11 +69,11 @@ Options are passed to knox to create a s3 client
 create a through stream, that push files to s3.
 publish take a `header` object that add or override existing s3 headers.
 
-Files that go through the stream get extra properties
-  s3.path: s3 path
-  s3.etag: file etag
-  s3.state: publication state (create, update, cache or skip)
-  s3.headers: s3 headers for this file
+Files that go through the stream receive extra properties
+  - s3.path: s3 path
+  - s3.etag: file etag
+  - s3.state: publication state (create, update, cache or skip)
+  - s3.headers: s3 headers for this file
 
 Defaults headers are:
   - x-amz-acl: public-read
