@@ -33,7 +33,6 @@ var headers = {
 var jsgz = gulp.src('./public/*.js')
   .pipe(awspublish.gzip({ ext: '.gz' }))
   .pipe(publisher.publish(headers));
-  .pipe(publisher.sync())  // sync local directory with bucket
   .pipe(publisher.cache()) // create a cache file to speed up next uploads
   .pipe(awspublish.reporter()); // print upload updates to console
 ```
@@ -55,53 +54,49 @@ with your bucket credentials, then run mocha.
 
 ### awspublish.gzip(options)
 
- create a through stream, that gzip file and add Content-Encoding header
- Available options:
+create a through stream, that gzip file and add Content-Encoding header.
+
+Available options:
   - ext: file extension to add to gzipped file (eg: { ext: '.gz' })
 
 ### awspublish.create(options)
 
-Create a Publisher
-Options are passed to knox to create a s3 client
+Create a Publisher. Options are passed to knox to create a s3 client.
 
 #### Publisher.publish(headers)
 
-create a through stream, that push files to s3.
-publish take a `header` object that add or override existing s3 headers.
+Create a through stream, that push files to s3.Publish take a `header` object that add or override existing s3 headers.
 
-Files that go through the stream receive extra properties
+Files that go through the stream receive extra properties:
+
   - s3.path: s3 path
   - s3.etag: file etag
   - s3.state: publication state (create, update, cache or skip)
-  - s3.headers: s3 headers for this file
-
-Defaults headers are:
-  - x-amz-acl: public-read
-  - Content-Type
-  - Content-Length
+  - s3.headers: s3 headers for this file. Defaults headers are:
+    - x-amz-acl: public-read
+    - Content-Type
+    - Content-Length
 
 #### publisher.cache()
 
- create a through stream that create or update a cache file using file s3 path
- and file etag. Consecutive runs of publish will use this file to avoid reuploading identical files
+Create a through stream that create or update a cache file using file s3 path and file etag.
+Consecutive runs of publish will use this file to avoid reuploading identical files.
 
-
-Cache file is save in the current working dir and is named.awspublish-bucket
-The cache file is flushed to disk every 10 files just to be safe :)
+Cache file is save in the current working dir and is named.awspublish-bucket. The cache file is flushed to disk every 10 files just to be safe :).
 
 #### Publisher.sync()
 
-create a transform stream that delete old files from the bucket
-Both new and delete files are written to the stream
-deleted file will have s3.state set to delete
+create a transform stream that delete old files from the bucket. Both new and delete files are written to the stream. Deleted file will have s3.state property set to delete.
+
+> **warning** `sync` will delete files in your bucket that are not in your local folder.
 
 #### Publisher.client
 
-the knox client to let you do other s3 operations
+The knox client object exposed to let you do other s3 operations.
 
 ### awspublish.reporter([options])
 
-create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip)
+Create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip).
 
 Available options:
   - states: list of state to log (default to all)
