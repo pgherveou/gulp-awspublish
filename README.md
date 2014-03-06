@@ -108,6 +108,9 @@ The knox client object exposed to let you do other s3 operations.
 
 Create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip).
 
+Available options:
+  - states: list of state to log (default to all)
+
 ```js
 // this will publish,sync bucket files and print created, updated and deleted files 
 gulp.src('./public/*')
@@ -117,9 +120,6 @@ gulp.src('./public/*')
       states: ['create', 'update', 'delete']
     }));
 ```
-
-Available options:
-  - states: list of state to log (default to all)
 
 ## License
 
