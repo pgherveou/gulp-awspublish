@@ -90,6 +90,16 @@ create a transform stream that delete old files from the bucket. Both new and de
 
 > **warning** `sync` will delete files in your bucket that are not in your local folder.
 
+```js
+// this will publish and sync bucket files with the one in your public directory  
+gulp.src('./public/*')
+  .pipe(publisher.publish())
+  .pipe(publisher.sync())  
+  .pipe(awspublish.reporter()); 
+  
+```
+
+
 #### Publisher.client
 
 The knox client object exposed to let you do other s3 operations.
@@ -100,7 +110,6 @@ Create a reporter that logs s3.path and s3.state (delete, create, update, cache,
 
 Available options:
   - states: list of state to log (default to all)
-
 
 ## License
 
