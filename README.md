@@ -16,15 +16,10 @@ Then, add it to your `gulpfile.js`:
 ```javascript
 var awspublish = require('gulp-awspublish');
 
-
 gulp.task('publish', function() {
 
   // create a new publisher
-  var publisher = awspublish.create({ 
-    key: '...', 
-    secret: '...', 
-    bucket: '...'
-   });
+  var publisher = awspublish.create({ key: '...',  secret: '...', bucket: '...' });
   
   // define custom headers
   var headers = { 
@@ -112,7 +107,6 @@ gulp.src('./public/*')
   .pipe(awspublish.reporter()); 
   
 ```
-
 
 #### Publisher.client
 
