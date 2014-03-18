@@ -15,26 +15,40 @@ Then, add it to your `gulpfile.js`:
 
 ```javascript
 var awspublish = require('gulp-awspublish');
-var publisher = awspublish.create({ 
-  key: '...', 
-  secret: '...', 
-  bucket: '...'
- });
 
-var headers = { 
-   'Cache-Control': 'max-age=315360000, no-transform, public' 
-   // ...
- };
 
-// gzip and publish all js files (uploaded files will have a .gz extension)
-// Set Content-Length, Content-Type and Cache-Control headers
-// Set x-amz-acl to public-read by default
-// Set Content-Encoding headers
-var jsgz = gulp.src('./public/*.js')
-  .pipe(awspublish.gzip({ ext: '.gz' }))
-  .pipe(publisher.publish(headers));
-  .pipe(publisher.cache()) // create a cache file to speed up next uploads
-  .pipe(awspublish.reporter()); // print upload updates to console
+gulp.task('publish', function() {
+
+  // create a new publisher
+  var publisher = awspublish.create({ 
+    key: '...', 
+    secret: '...', 
+    bucket: '...'
+   });
+  
+  // define custom headers
+  var headers = { 
+     'Cache-Control': 'max-age=315360000, no-transform, public' 
+     // ...
+   };
+   
+  return gulp.src('./public/*.js')
+  
+     // gzip, Set Content-Encoding headers and add .gz extension
+    .pipe(awspublish.gzip({ ext: '.gz' })) 
+    
+    // publisher will add Content-Length, Content-Type and Cache-Control headers  
+    // and if not specified will set x-amz-acl to public-read by default
+    .pipe(publisher.publish(headers)); 
+    
+    // create a cache file to speed up consecutive uploads
+    .pipe(publisher.cache()) 
+    
+     // print upload updates to console 
+    .pipe(awspublish.reporter()); 
+});
+
+
 ```
 
 ## Testing
