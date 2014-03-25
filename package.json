@@ -31,7 +31,8 @@
     "mime": "1.x",
     "clone": "0.x",
     "pad-component": "0.x",
-    "event-stream": "3.x"
+    "event-stream": "3.x",
+    "xml2js": "~0.4.1"
   },
   "devDependencies": {
     "mocha": "*",
