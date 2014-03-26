@@ -14,31 +14,35 @@ npm install --save-dev gulp-awspublish
 Then, add it to your `gulpfile.js`:
 
 ```javascript
-var es = require('event-stream'),
-    awspublish = require('gulp-awspublish'),
-    publisher = awspublish.create({ key: '...', secret: '...', bucket: '...'}),
-    headers = { 'Cache-Control': 'max-age=315360000, no-transform, public' };
+var awspublish = require('gulp-awspublish');
 
-// publish all js files
-// Set Content-Length, Content-Type and Cache-Control headers
-// Set x-amz-acl to public-read by default
-var js = gulp.src('./public/*.js')
-  .pipe(publisher.publish(headers));
+gulp.task('publish', function() {
 
-// gzip and publish all js files
-// Content-Encoding headers will be added on top of other headers
-// uploaded files will have a jsgz extension
-var jsgz = gulp.src('./public/*.js')
-  .pipe(awspublish.gzip({ ext: '.gz' }))
-  .pipe(publisher.publish(headers));
+  // create a new publisher
+  var publisher = awspublish.create({ key: '...',  secret: '...', bucket: '...' });
+  
+  // define custom headers
+  var headers = { 
+     'Cache-Control': 'max-age=315360000, no-transform, public' 
+     // ...
+   };
+   
+  return gulp.src('./public/*.js')
+  
+     // gzip, Set Content-Encoding headers and add .gz extension
+    .pipe(awspublish.gzip({ ext: '.gz' })) 
+    
+    // publisher will add Content-Length, Content-Type and Cache-Control headers  
+    // and if not specified will set x-amz-acl to public-read by default
+    .pipe(publisher.publish(headers)); 
+    
+    // create a cache file to speed up consecutive uploads
+    .pipe(publisher.cache()) 
+    
+     // print upload updates to console 
+    .pipe(awspublish.reporter()); 
+});
 
-// sync content of s3 bucket with files in the stream
-// cache s3 etags locally to avoid unnecessary request next time
-// print progress with reporter
-es.merge(js, jsgz)
-  .pipe(publisher.sync())
-  .pipe(publisher.cache())
-  .pipe(awspublish.reporter());
 
 ```
 
@@ -59,57 +63,71 @@ with your bucket credentials, then run mocha.
 
 ### awspublish.gzip(options)
 
- create a through stream, that gzip file and add Content-Encoding header
- Available options:
+create a through stream, that gzip file and add Content-Encoding header.
+
+Available options:
   - ext: file extension to add to gzipped file (eg: { ext: '.gz' })
 
 ### awspublish.create(options)
 
-Create a Publisher
-Options are passed to knox to create a s3 client
+Create a Publisher. Options are passed to knox to create a s3 client.
 
 #### Publisher.publish(headers)
 
-create a through stream, that push files to s3.
-publish take a `header` object that add or override existing s3 headers.
+Create a through stream, that push files to s3.Publish take a `header` object that add or override existing s3 headers.
 
-Files that go through the stream get extra properties
-  s3.path: s3 path
-  s3.etag: file etag
-  s3.state: publication state (create, update, cache or skip)
-  s3.headers: s3 headers for this file
+Files that go through the stream receive extra properties:
 
-Defaults headers are:
-  - x-amz-acl: public-read
-  - Content-Type
-  - Content-Length
+  - s3.path: s3 path
+  - s3.etag: file etag
+  - s3.state: publication state (create, update, cache or skip)
+  - s3.headers: s3 headers for this file. Defaults headers are:
+    - x-amz-acl: public-read
+    - Content-Type
+    - Content-Length
 
 #### publisher.cache()
 
- create a through stream that create or update a cache file using file s3 path
- and file etag. Consecutive runs of publish will use this file to avoid reuploading identical files
+Create a through stream that create or update a cache file using file s3 path and file etag.
+Consecutive runs of publish will use this file to avoid reuploading identical files.
 
-
-Cache file is save in the current working dir and is named.awspublish-bucket
-The cache file is flushed to disk every 10 files just to be safe :)
+Cache file is save in the current working dir and is named.awspublish-bucket. The cache file is flushed to disk every 10 files just to be safe :).
 
 #### Publisher.sync()
 
-create a transform stream that delete old files from the bucket
-Both new and delete files are written to the stream
-deleted file will have s3.state set to delete
+create a transform stream that delete old files from the bucket. Both new and delete files are written to the stream. Deleted file will have s3.state property set to delete.
+
+> **warning** `sync` will delete files in your bucket that are not in your local folder.
+
+```js
+// this will publish and sync bucket files with the one in your public directory  
+gulp.src('./public/*')
+  .pipe(publisher.publish())
+  .pipe(publisher.sync())  
+  .pipe(awspublish.reporter()); 
+  
+```
 
 #### Publisher.client
 
-the knox client to let you do other s3 operations
+The knox client object exposed to let you do other s3 operations.
 
 ### awspublish.reporter([options])
 
-create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip)
+Create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip).
 
 Available options:
   - states: list of state to log (default to all)
 
+```js
+// this will publish,sync bucket files and print created, updated and deleted files 
+gulp.src('./public/*')
+  .pipe(publisher.publish())
+  .pipe(publisher.sync())  
+  .pipe(awspublish.reporter({
+      states: ['create', 'update', 'delete']
+    }));
+```
 
 ## License
 
