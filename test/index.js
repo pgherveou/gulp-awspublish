@@ -6,6 +6,7 @@ var fs = require('fs'),
   chai = require('chai'),
   es = require('event-stream'),
   gutil = require('gulp-util'),
+  clone = require('clone'),
   expect = chai.expect;
 
 require('mocha');
@@ -18,8 +19,8 @@ describe('gulp-awspublish', function () {
 
   this.timeout(5000);
 
-  var credentials = fs.readFileSync('aws-credentials.json', 'utf8'),
-      publisher = awspublish.create(JSON.parse(credentials)),
+  var credentials = JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8')),
+      publisher = awspublish.create(credentials),
       cacheFile = '.awspublish-' + publisher.client.bucket;
 
   // remove files
@@ -189,6 +190,28 @@ describe('gulp-awspublish', function () {
         expect(files[0].s3.state).to.eq('cache');
         done(err);
       }));
+
+      stream.write(new gutil.File({
+        path: '/test/hello.txt',
+        base: '/',
+        contents: new Buffer('hello world 2')
+      }));
+
+      stream.end();
+    });
+
+    it('should emit knox error', function(done) {
+      var badCredentials, badPublisher, stream;
+
+      badCredentials = clone(credentials);
+      badCredentials.bucket = 'fake-bucket';
+      badPublisher = awspublish.create(badCredentials),
+      stream = badPublisher.publish();
+
+      stream.on('error', function(err) {
+        expect(err).to.be.ok;
+        done();
+      });
 
       stream.write(new gutil.File({
         path: '/test/hello.txt',
