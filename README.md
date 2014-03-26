@@ -129,6 +129,28 @@ gulp.src('./public/*')
     }));
 ```
 
+## Example
+
+### rename file & directory
+
+You can use `gulp-rename` to rename your files on s3 
+
+```js
+// see examples/rename.js
+
+gulp.src('examples/fixtures/*.js')
+    .pipe(rename(function (path) {
+        path.dirname += '/s3-examples';
+        path.basename += '-s3';
+    }))
+    .pipe(publisher.publish())
+    .pipe(awspublish.reporter());
+
+// output
+// [gulp] [create] s3-examples/bar-s3.js
+// [gulp] [create] s3-examples/foo-s3.js    
+```
+
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
