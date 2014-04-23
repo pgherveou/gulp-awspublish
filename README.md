@@ -32,9 +32,9 @@ gulp.task('publish', function() {
      // gzip, Set Content-Encoding headers and add .gz extension
     .pipe(awspublish.gzip({ ext: '.gz' })) 
     
-    // publisher will add Content-Length, Content-Type and Cache-Control headers  
-    // and if not specified will set x-amz-acl to public-read by default
-    .pipe(publisher.publish(headers)); 
+    // publisher will add Content-Length, Content-Type and  headers specified above
+    // If not specified it will set x-amz-acl to public-read by default
+    .pipe(publisher.publish(headers))
     
     // create a cache file to speed up consecutive uploads
     .pipe(publisher.cache()) 
@@ -43,7 +43,12 @@ gulp.task('publish', function() {
     .pipe(awspublish.reporter()); 
 });
 
-
+// output
+// [gulp] [create] file1.js.gz
+// [gulp] [create] file2.js.gz
+// [gulp] [update] file3.js.gz
+// [gulp] [cache]  file3.js.gz
+// ... 
 ```
 
 ## Testing
@@ -105,6 +110,12 @@ gulp.src('./public/*')
   .pipe(publisher.publish())
   .pipe(publisher.sync())  
   .pipe(awspublish.reporter()); 
+  
+// output 
+// [gulp] [create] file1.js
+// [gulp] [update] file2.js
+// [gulp] [delete] file3.js
+// ...   
   
 ```
 
