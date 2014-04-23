@@ -31,7 +31,9 @@
     "mime": "1.x",
     "clone": "0.x",
     "pad-component": "0.x",
-    "event-stream": "3.x"
+    "event-stream": "3.x",
+    "s3-lister": "0.x",
+    "s3-deleter": "0.x"
   },
   "devDependencies": {
     "mocha": "*",
