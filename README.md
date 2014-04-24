@@ -20,27 +20,27 @@ gulp.task('publish', function() {
 
   // create a new publisher
   var publisher = awspublish.create({ key: '...',  secret: '...', bucket: '...' });
-  
+
   // define custom headers
-  var headers = { 
-     'Cache-Control': 'max-age=315360000, no-transform, public' 
+  var headers = {
+     'Cache-Control': 'max-age=315360000, no-transform, public'
      // ...
    };
-   
+
   return gulp.src('./public/*.js')
-  
+
      // gzip, Set Content-Encoding headers and add .gz extension
-    .pipe(awspublish.gzip({ ext: '.gz' })) 
-    
+    .pipe(awspublish.gzip({ ext: '.gz' }))
+
     // publisher will add Content-Length, Content-Type and  headers specified above
     // If not specified it will set x-amz-acl to public-read by default
     .pipe(publisher.publish(headers))
-    
+
     // create a cache file to speed up consecutive uploads
-    .pipe(publisher.cache()) 
-    
-     // print upload updates to console 
-    .pipe(awspublish.reporter()); 
+    .pipe(publisher.cache())
+
+     // print upload updates to console
+    .pipe(awspublish.reporter());
 });
 
 // output
@@ -48,7 +48,7 @@ gulp.task('publish', function() {
 // [gulp] [create] file2.js.gz
 // [gulp] [update] file3.js.gz
 // [gulp] [cache]  file3.js.gz
-// ... 
+// ...
 ```
 
 ## Testing
@@ -98,25 +98,27 @@ Consecutive runs of publish will use this file to avoid reuploading identical fi
 
 Cache file is save in the current working dir and is named.awspublish-bucket. The cache file is flushed to disk every 10 files just to be safe :).
 
-#### Publisher.sync()
+#### Publisher.sync([prefix])
 
-create a transform stream that delete old files from the bucket. Both new and delete files are written to the stream. Deleted file will have s3.state property set to delete.
+create a transform stream that delete old files from the bucket.
+You can speficy a prefix to sync a specific directory.
+Both new and delete files are written to the stream. Deleted file will have s3.state property set to delete.
 
 > **warning** `sync` will delete files in your bucket that are not in your local folder.
 
 ```js
-// this will publish and sync bucket files with the one in your public directory  
+// this will publish and sync bucket files with the one in your public directory
 gulp.src('./public/*')
   .pipe(publisher.publish())
-  .pipe(publisher.sync())  
-  .pipe(awspublish.reporter()); 
-  
-// output 
+  .pipe(publisher.sync())
+  .pipe(awspublish.reporter());
+
+// output
 // [gulp] [create] file1.js
 // [gulp] [update] file2.js
 // [gulp] [delete] file3.js
-// ...   
-  
+// ...
+
 ```
 
 #### Publisher.client
@@ -131,10 +133,10 @@ Available options:
   - states: list of state to log (default to all)
 
 ```js
-// this will publish,sync bucket files and print created, updated and deleted files 
+// this will publish,sync bucket files and print created, updated and deleted files
 gulp.src('./public/*')
   .pipe(publisher.publish())
-  .pipe(publisher.sync())  
+  .pipe(publisher.sync())
   .pipe(awspublish.reporter({
       states: ['create', 'update', 'delete']
     }));
@@ -144,7 +146,7 @@ gulp.src('./public/*')
 
 ### rename file & directory
 
-You can use `gulp-rename` to rename your files on s3 
+You can use `gulp-rename` to rename your files on s3
 
 ```js
 // see examples/rename.js
@@ -159,7 +161,7 @@ gulp.src('examples/fixtures/*.js')
 
 // output
 // [gulp] [create] s3-examples/bar-s3.js
-// [gulp] [create] s3-examples/foo-s3.js    
+// [gulp] [create] s3-examples/foo-s3.js
 ```
 
 ## License

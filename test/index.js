@@ -236,7 +236,7 @@ describe('gulp-awspublish', function () {
     });
 
     // add some dummy file
-    ['bar', 'foo', 'bim', 'boum'].forEach(function (name) {
+    ['bar', 'foo/1', 'foo/2', 'foo/3'].forEach(function (name) {
       var filename = name + '.txt',
           headers = {'Content-Type': 'text/plain'};
       before(function(done) {
@@ -248,7 +248,7 @@ describe('gulp-awspublish', function () {
       var stream = gutil.noop();
 
       stream
-        .pipe(publisher.sync())
+        .pipe(publisher.sync('foo'))
         .pipe(es.writeArray(function(err, arr) {
           expect(err).to.not.exist;
           var deleted = arr.filter(function (file) {
@@ -257,12 +257,11 @@ describe('gulp-awspublish', function () {
             return file.s3.path;
           }).sort().join(' ');
 
-          expect(deleted).to.eq('boum.txt foo.txt');
+          expect(deleted).to.eq('foo/2.txt foo/3.txt');
           done(err);
         }));
 
-      stream.write({ s3: { path: 'bim.txt' } });
-      stream.write({ s3: { path: 'bar.txt' } });
+      stream.write({ s3: { path: 'foo/1.txt' } });
       stream.end();
     });
   });
