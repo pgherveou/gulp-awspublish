@@ -1,4 +1,9 @@
 
+0.0.16 / 2014-05-08
+==================
+
+ * fixes #14, add force option on publish to bypass skip/cache
+
 0.0.15 / 2014-05-08
 ==================
 
