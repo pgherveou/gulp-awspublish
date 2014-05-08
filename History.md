@@ -1,4 +1,10 @@
 
+0.0.15 / 2014-05-08
+==================
+
+ * force end event fixes #13
+ * add test and doc for sync prefix option
+
 0.0.14 / 2014-04-22
 ==================
 
