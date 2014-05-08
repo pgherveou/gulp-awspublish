@@ -200,6 +200,24 @@ describe('gulp-awspublish', function () {
       stream.end();
     });
 
+    it('should force upload', function (done) {
+      var stream = publisher.publish({}, { force: true });
+      stream.pipe(es.writeArray(function(err, files) {
+        expect(err).not.to.exist;
+        expect(files).to.have.length(1);
+        expect(files[0].s3.state).to.eq('update');
+        done(err);
+      }));
+
+      stream.write(new gutil.File({
+        path: '/test/hello.txt',
+        base: '/',
+        contents: new Buffer('hello world 2')
+      }));
+
+      stream.end();
+    });
+
     it('should emit knox error', function(done) {
       var badCredentials, badPublisher, stream;
 

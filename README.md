@@ -77,9 +77,12 @@ Available options:
 
 Create a Publisher. Options are passed to knox to create a s3 client.
 
-#### Publisher.publish(headers)
+#### Publisher.publish([headers], [options])
 
-Create a through stream, that push files to s3.Publish take a `header` object that add or override existing s3 headers.
+Create a through stream, that push files to s3.
+- header: hash of headers to add or override to existing s3 headers.
+- options: optional additional publishing options
+  - force: bypass cache / skip
 
 Files that go through the stream receive extra properties:
 
