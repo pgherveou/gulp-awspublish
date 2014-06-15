@@ -17,7 +17,7 @@ var awspublish = require('../');
 
 describe('gulp-awspublish', function () {
 
-  this.timeout(5000);
+  this.timeout(10000);
 
   var credentials = JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8')),
       publisher = awspublish.create(credentials),
@@ -218,7 +218,7 @@ describe('gulp-awspublish', function () {
       stream.end();
     });
 
-    it('should emit knox error', function(done) {
+    it.only('should emit error when using invalid bucket', function(done) {
       var badCredentials, badPublisher, stream;
 
       badCredentials = clone(credentials);
@@ -228,6 +228,7 @@ describe('gulp-awspublish', function () {
 
       stream.on('error', function(err) {
         expect(err).to.be.ok;
+        expect(err.statusCode).to.eq(403);
         done();
       });
 
@@ -240,6 +241,25 @@ describe('gulp-awspublish', function () {
       stream.end();
     });
 
+    it('should emit error when user does not have upload rights', function(done) {
+      var badCredentials = JSON.parse(fs.readFileSync('bad-aws-credentials.json', 'utf8')),
+          badPublisher = awspublish.create(badCredentials),
+          stream = badPublisher.publish();
+
+      stream.on('error', function(err) {
+        expect(err).to.be.ok;
+        expect(err.statusCode).to.eq(403);
+        done();
+      });
+
+      stream.write(new gutil.File({
+        path: '/test/hello.txt',
+        base: '/',
+        contents: new Buffer('hello world 2')
+      }));
+
+      stream.end();
+    });
   });
 
   describe('Sync', function() {
@@ -283,6 +303,4 @@ describe('gulp-awspublish', function () {
       stream.end();
     });
   });
-
-
 });
