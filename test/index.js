@@ -7,17 +7,12 @@ var fs = require('fs'),
   es = require('event-stream'),
   gutil = require('gulp-util'),
   clone = require('clone'),
+  awspublish = require('../'),
   expect = chai.expect;
-
-require('mocha');
-
-delete require.cache[require.resolve('../')];
-
-var awspublish = require('../');
 
 describe('gulp-awspublish', function () {
 
-  this.timeout(10000);
+  this.timeout(5000);
 
   var credentials = JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8')),
       publisher = awspublish.create(credentials),
@@ -35,6 +30,49 @@ describe('gulp-awspublish', function () {
   });
 
   describe('Publish', function() {
+
+    it('should emit error when using invalid bucket', function(done) {
+      var badCredentials, badPublisher, stream;
+
+      badCredentials = clone(credentials);
+      badCredentials.bucket = 'fake-bucket';
+      badPublisher = awspublish.create(badCredentials),
+      stream = badPublisher.publish();
+
+      stream.on('error', function(err) {
+        expect(err).to.be.ok;
+        expect(err.res.statusCode).to.eq(403);
+        done();
+      });
+
+      stream.write(new gutil.File({
+        path: '/test/hello.txt',
+        base: '/',
+        contents: new Buffer('hello world 2')
+      }));
+
+      stream.end();
+    });
+
+    it('should emit error when user does not have upload rights', function(done) {
+      var badCredentials = JSON.parse(fs.readFileSync('bad-aws-credentials.json', 'utf8')),
+          badPublisher = awspublish.create(badCredentials),
+          stream = badPublisher.publish();
+
+      stream.on('error', function(err) {
+        expect(err).to.be.ok;
+        expect(err.res.statusCode).to.eq(403);
+        done();
+      });
+
+      stream.write(new gutil.File({
+        path: '/test/hello.txt',
+        base: '/',
+        contents: new Buffer('hello world 2')
+      }));
+
+      stream.end();
+    });
 
     it('should produce gzip file with s3 headers', function (done) {
 
@@ -208,49 +246,6 @@ describe('gulp-awspublish', function () {
         expect(files[0].s3.state).to.eq('update');
         done(err);
       }));
-
-      stream.write(new gutil.File({
-        path: '/test/hello.txt',
-        base: '/',
-        contents: new Buffer('hello world 2')
-      }));
-
-      stream.end();
-    });
-
-    it.only('should emit error when using invalid bucket', function(done) {
-      var badCredentials, badPublisher, stream;
-
-      badCredentials = clone(credentials);
-      badCredentials.bucket = 'fake-bucket';
-      badPublisher = awspublish.create(badCredentials),
-      stream = badPublisher.publish();
-
-      stream.on('error', function(err) {
-        expect(err).to.be.ok;
-        expect(err.statusCode).to.eq(403);
-        done();
-      });
-
-      stream.write(new gutil.File({
-        path: '/test/hello.txt',
-        base: '/',
-        contents: new Buffer('hello world 2')
-      }));
-
-      stream.end();
-    });
-
-    it('should emit error when user does not have upload rights', function(done) {
-      var badCredentials = JSON.parse(fs.readFileSync('bad-aws-credentials.json', 'utf8')),
-          badPublisher = awspublish.create(badCredentials),
-          stream = badPublisher.publish();
-
-      stream.on('error', function(err) {
-        expect(err).to.be.ok;
-        expect(err.statusCode).to.eq(403);
-        done();
-      });
 
       stream.write(new gutil.File({
         path: '/test/hello.txt',
