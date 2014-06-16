@@ -1,4 +1,10 @@
 
+0.0.17 / 2014-06-16
+==================
+
+ * add user with no upload rights test
+ * update error reporting
+
 0.0.16 / 2014-05-08
 ==================
 
