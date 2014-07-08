@@ -35,7 +35,7 @@ gulp.task('publish', function() {
     // publisher will add Content-Length, Content-Type and  headers specified above
     // If not specified it will set x-amz-acl to public-read by default
     .pipe(publisher.publish(headers))
-    
+
     // create a cache file to speed up consecutive uploads
     .pipe(publisher.cache())
 
@@ -88,6 +88,7 @@ Files that go through the stream receive extra properties:
 
   - s3.path: s3 path
   - s3.etag: file etag
+  - s3.date: file last modified date
   - s3.state: publication state (create, update, cache or skip)
   - s3.headers: s3 headers for this file. Defaults headers are:
     - x-amz-acl: public-read
