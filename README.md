@@ -168,6 +168,12 @@ gulp.src('examples/fixtures/*.js')
 // [gulp] [create] s3-examples/foo-s3.js
 ```
 
+## Plugins
+
+### gulp-awspublish-router
+A router for defining file-specific rules
+https://www.npmjs.org/package/gulp-awspublish-router
+
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
