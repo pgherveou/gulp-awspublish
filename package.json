@@ -36,12 +36,13 @@
     "s3-deleter": "0.x"
   },
   "devDependencies": {
-    "mocha": "*",
-    "coveralls": "*",
-    "mocha-lcov-reporter": "*",
-    "istanbul": "*",
     "chai": "*",
-    "gulp-rename": "*"
+    "concurrent-transform": "^1.0.0",
+    "coveralls": "*",
+    "gulp-rename": "*",
+    "istanbul": "*",
+    "mocha": "*",
+    "mocha-lcov-reporter": "*"
   },
   "engines": {
     "node": ">=0.8.0",
