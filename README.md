@@ -168,6 +168,17 @@ gulp.src('examples/fixtures/*.js')
 // [gulp] [create] s3-examples/foo-s3.js
 ```
 
+### upload file in parallel
+
+You can use `concurrent-transform` to upload files in parallel to your amazon bucket
+
+```js
+gulp
+  .src('examples/fixtures/*.js')
+  .pipe(parallelize(publisher.publish(), 10))
+  .pipe(awspublish.reporter());
+```
+
 ## Plugins
 
 ### gulp-awspublish-router
