@@ -155,7 +155,7 @@ describe('gulp-awspublish', function () {
           expect(files[0].s3.state).to.eq('create');
           expect(files[0].s3.headers['Cache-Control']).to.eq(headers['Cache-Control']);
           expect(files[0].s3.headers['x-amz-acl']).to.eq('public-read');
-          expect(files[0].s3.headers['Content-Type']).to.eq('text/plain');
+          expect(files[0].s3.headers['Content-Type']).to.eq('text/plain; charset=utf-8');
           expect(files[0].s3.headers['Content-Length']).to.eq(files[0].contents.length);
           publisher.client.headFile('/test/hello.txt', function(err, res) {
             expect(res.headers.etag).to.exist;
@@ -271,7 +271,7 @@ describe('gulp-awspublish', function () {
     // add some dummy file
     ['bar', 'foo/1', 'foo/2', 'foo/3'].forEach(function (name) {
       var filename = name + '.txt',
-          headers = {'Content-Type': 'text/plain'};
+          headers = {'Content-Type': 'text/plain; charset=utf-8'};
       before(function(done) {
         publisher.client.putBuffer(name, filename, headers, done);
       });
