@@ -1,3 +1,11 @@
+0.0.19 / 2014-07-15
+==================
+
+ * Fixes #22
+ * Merge pull request #24 from koistya/master
+ * Merge pull request #25 from scalableminds/master
+ * added concurrent upload sample
+ * Fix relative paths on Windows. Fixes pgherveou/gulp-awspublish#20
 
 0.0.18 / 2014-07-08
 ==================
