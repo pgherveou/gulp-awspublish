@@ -1,3 +1,9 @@
+
+0.0.20 / 2014-07-18
+==================
+
+ * dont use file.clone when gzip file to conserve file custom ppties
+
 0.0.19 / 2014-07-15
 ==================
 
