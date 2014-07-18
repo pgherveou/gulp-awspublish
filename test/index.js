@@ -12,7 +12,7 @@ var fs = require('fs'),
 
 describe('gulp-awspublish', function () {
 
-  this.timeout(5000);
+  this.timeout(10000);
 
   var credentials = JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8')),
       publisher = awspublish.create(credentials),
@@ -77,10 +77,11 @@ describe('gulp-awspublish', function () {
     it('should produce gzip file with s3 headers', function (done) {
 
       var gzip = awspublish.gzip({ ext: '.gz' });
+      var contents = new Buffer('hello world');
       var srcFile = new gutil.File({
         path: '/test/hello.txt',
         base: '/',
-        contents: new Buffer('hello world')
+        contents: contents
       });
 
       gzip.write(srcFile);
@@ -88,15 +89,14 @@ describe('gulp-awspublish', function () {
         .pipe(es.writeArray(function(err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
-          expect(files[0]).to.not.eq(srcFile);
-          expect(files[0].path).to.eq(srcFile.path + '.gz');
+          expect(files[0].path).to.eq('/test/hello.txt.gz');
           expect(files[0].s3.path).to.eq('test/hello.txt.gz');
           expect(files[0].s3.headers['Content-Encoding']).to.eq('gzip');
 
           // compare uncompressed to srcFile
           zlib.unzip(files[0].contents, function(err, buf) {
             var newFileContent = buf.toString('utf8', 0, buf.length),
-                srcFileContent = srcFile.contents.toString('utf8', 0, srcFile.contents.length);
+                srcFileContent = contents.toString('utf8', 0, contents.length);
             expect(newFileContent).to.eq(srcFileContent);
             done();
           });
