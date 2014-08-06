@@ -76,7 +76,7 @@ Available options:
 ### awspublish.create(options)
 
 Create a Publisher. Options are passed to knox to create a s3 client.
-We use knox to connect to s3 they explain 
+We use knox to connect to s3 they explain
 Please see [knox](https://github.com/LearnBoost/knox#client-creation-options) for more details about these options
 
 #### Publisher.publish([headers], [options])
@@ -85,6 +85,7 @@ Create a through stream, that push files to s3.
 - header: hash of headers to add or override to existing s3 headers.
 - options: optional additional publishing options
   - force: bypass cache / skip
+  - simulate: debugging option to simulate s3 upload
 
 Files that go through the stream receive extra properties:
 

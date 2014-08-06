@@ -255,6 +255,28 @@ describe('gulp-awspublish', function () {
 
       stream.end();
     });
+
+    it('should simulate file upload on s3', function (done) {
+      var stream = publisher.publish(null, { simulate: true });
+      stream.write(new gutil.File({
+        path: '/test/simulate.txt',
+        base: '/',
+        contents: new Buffer('simulate')
+      }));
+
+      stream
+        .pipe(es.writeArray(function(err, files) {
+          expect(err).not.to.exist;
+          expect(files).to.have.length(1);
+          expect(files[0].s3.path).to.eq('test/simulate.txt');
+          publisher.client.headFile('/test/simulate.txt', function(err, res) {
+            expect(res.statusCode).to.eq(404);
+            done()
+          });
+        }));
+
+      stream.end();
+    });
   });
 
   describe('Sync', function() {
