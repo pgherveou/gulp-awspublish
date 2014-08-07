@@ -75,8 +75,8 @@ Available options:
 
 ### awspublish.create(options)
 
-Create a Publisher. Options are passed to knox to create a s3 client.
-We use knox to connect to s3 they explain
+Create a Publisher.
+Options are passed to knox to create a s3 client.
 Please see [knox](https://github.com/LearnBoost/knox#client-creation-options) for more details about these options
 
 #### Publisher.publish([headers], [options])
