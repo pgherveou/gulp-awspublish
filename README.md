@@ -176,6 +176,8 @@ gulp.src('examples/fixtures/*.js')
 You can use `concurrent-transform` to upload files in parallel to your amazon bucket
 
 ```js
+var parallelize = require("concurrent-transform");
+
 gulp
   .src('examples/fixtures/*.js')
   .pipe(parallelize(publisher.publish(), 10))
