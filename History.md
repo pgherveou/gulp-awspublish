@@ -1,4 +1,9 @@
 
+0.0.22 / 2014-08-08
+==================
+
+ * Handling S3 - 307 Status code pull request #30 from smalltownheroes/master
+
 0.0.21 / 2014-08-06
 ==================
 
