@@ -86,6 +86,7 @@ Create a through stream, that push files to s3.
 - options: optional additional publishing options
   - force: bypass cache / skip
   - simulate: debugging option to simulate s3 upload
+  - createOnly: skip file updates
 
 Files that go through the stream receive extra properties:
 

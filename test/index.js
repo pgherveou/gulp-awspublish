@@ -166,12 +166,32 @@ describe('gulp-awspublish', function () {
       stream.end();
     });
 
-    it('should update exsiting file on s3', function (done) {
+    it('should update existing file on s3', function (done) {
       var stream = publisher.publish();
       stream.pipe(es.writeArray(function(err, files) {
         expect(err).not.to.exist;
         expect(files).to.have.length(1);
         expect(files[0].s3.state).to.eq('update');
+        done(err);
+      }));
+
+      stream.write(new gutil.File({
+        path: '/test/hello.txt',
+        base: '/',
+        contents: new Buffer('hello world 2')
+      }));
+
+      stream.end();
+    });
+
+    it('can skip updating an existing file on s3 (createOnly)', function (done) {
+      var stream = publisher.publish({}, {
+        createOnly: true
+      });
+      stream.pipe(es.writeArray(function(err, files) {
+        expect(err).not.to.exist;
+        expect(files).to.have.length(1);
+        expect(files[0].s3.state).to.eq('skip');
         done(err);
       }));
 
