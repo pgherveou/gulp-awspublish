@@ -32,7 +32,7 @@ gulp.task('publish', function() {
      // gzip, Set Content-Encoding headers and add .gz extension
     .pipe(awspublish.gzip({ ext: '.gz' }))
 
-    // publisher will add Content-Length, Content-Type and  headers specified above
+    // publisher will add Content-Length, Content-Type and headers specified above
     // If not specified it will set x-amz-acl to public-read by default
     .pipe(publisher.publish(headers))
 
@@ -93,7 +93,7 @@ Files that go through the stream receive extra properties:
   - s3.path: s3 path
   - s3.etag: file etag
   - s3.date: file last modified date
-  - s3.state: publication state (create, update, cache or skip)
+  - s3.state: publication state (create, update, delete, cache or skip)
   - s3.headers: s3 headers for this file. Defaults headers are:
     - x-amz-acl: public-read
     - Content-Type
@@ -104,13 +104,12 @@ Files that go through the stream receive extra properties:
 Create a through stream that create or update a cache file using file s3 path and file etag.
 Consecutive runs of publish will use this file to avoid reuploading identical files.
 
-Cache file is save in the current working dir and is named.awspublish-bucket. The cache file is flushed to disk every 10 files just to be safe :).
+Cache file is save in the current working dir and is named `.awspublish-<bucket>`. The cache file is flushed to disk every 10 files just to be safe.
 
 #### Publisher.sync([prefix])
 
 create a transform stream that delete old files from the bucket.
 You can speficy a prefix to sync a specific directory.
-Both new and delete files are written to the stream. Deleted file will have s3.state property set to delete.
 
 > **warning** `sync` will delete files in your bucket that are not in your local folder.
 
