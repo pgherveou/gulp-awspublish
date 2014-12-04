@@ -3,6 +3,9 @@
 
 > awspublish plugin for [gulp](https://github.com/wearefractal/gulp)
 
+
+> **warning** the module does not work currently with node v.0.11.14 see https://github.com/pgherveou/gulp-awspublish/issues/33 for more info
+
 ## Usage
 
 First, install `gulp-awspublish` as a development dependency:
