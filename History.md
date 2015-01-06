@@ -1,4 +1,10 @@
 
+0.0.24 / 2015-01-06
+==================
+
+  * Fix for windows #36 from kkolstad-trov/fix/windows-separator
+  * Update README.md
+
 0.0.23 / 2014-09-02
 ==================
 
