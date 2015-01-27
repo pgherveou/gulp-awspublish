@@ -25,15 +25,14 @@
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "dependencies": {
-    "through2": "0.x",
-    "gulp-util": "2.x",
-    "knox": "0.x",
-    "mime": "1.x",
+    "aws-sdk": "^2.1.7",
     "clone": "0.x",
+    "gulp-util": "2.x",
+    "mime": "1.x",
     "pad-component": "0.x",
-    "event-stream": "3.x",
-    "s3-lister": "0.x",
-    "s3-deleter": "0.x"
+    "pascal-case": "^1.1.0",
+    "through2": "0.x",
+    "xml-stream": "^0.4.5"
   },
   "devDependencies": {
     "chai": "*",
