@@ -38,6 +38,7 @@
     "chai": "*",
     "concurrent-transform": "^1.0.0",
     "coveralls": "*",
+    "event-stream": "^3.2.1",
     "gulp-rename": "*",
     "istanbul": "*",
     "mocha": "*",
