@@ -1,4 +1,9 @@
 
+1.0.1 / 2015-01-29
+==================
+
+  * config: fix region setting pull request #40 from klaemo
+
 1.0.0 / 2015-01-29
 ==================
 
