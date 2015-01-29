@@ -22,11 +22,14 @@ describe('gulp-awspublish', function () {
   before(function(done) {
     try { fs.unlinkSync(cacheFile); } catch (err) {}
     publisher._cache = {};
-    publisher.client.deleteMultiple([
+
+    var deleteParams = awspublish._buildDeleteMultiple([
       'test/hello.txt',
       'test/hello2.txt',
       'test/hello.txtgz'
-    ], done);
+    ]);
+
+    publisher.client.deleteObjects(deleteParams, done);
   });
 
   describe('Publish', function() {
@@ -41,27 +44,7 @@ describe('gulp-awspublish', function () {
 
       stream.on('error', function(err) {
         expect(err).to.be.ok;
-        expect(err.res.statusCode).to.eq(403);
-        done();
-      });
-
-      stream.write(new gutil.File({
-        path: '/test/hello.txt',
-        base: '/',
-        contents: new Buffer('hello world 2')
-      }));
-
-      stream.end();
-    });
-
-    it('should emit error when user does not have upload rights', function(done) {
-      var badCredentials = JSON.parse(fs.readFileSync('bad-aws-credentials.json', 'utf8')),
-          badPublisher = awspublish.create(badCredentials),
-          stream = badPublisher.publish();
-
-      stream.on('error', function(err) {
-        expect(err).to.be.ok;
-        expect(err.res.statusCode).to.eq(403);
+        expect(err.statusCode).to.eq(403);
         done();
       });
 
@@ -119,8 +102,8 @@ describe('gulp-awspublish', function () {
         .pipe(es.writeArray(function(err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
-          publisher.client.headFile('test/hello.txt.gz', function(err, res) {
-            expect(res.headers.etag).to.exist;
+          publisher.client.headObject({ Key: 'test/hello.txt.gz' }, function(err, res) {
+            expect(res.ETag).to.exist;
             done(err);
           });
         }));
@@ -157,8 +140,8 @@ describe('gulp-awspublish', function () {
           expect(files[0].s3.headers['x-amz-acl']).to.eq('public-read');
           expect(files[0].s3.headers['Content-Type']).to.eq('text/plain; charset=utf-8');
           expect(files[0].s3.headers['Content-Length']).to.eq(files[0].contents.length);
-          publisher.client.headFile('/test/hello.txt', function(err, res) {
-            expect(res.headers.etag).to.exist;
+          publisher.client.headObject({ Key: 'test/hello.txt' }, function(err, res) {
+            expect(res.ETag).to.exist;
             done(err);
           });
         }));
@@ -289,9 +272,9 @@ describe('gulp-awspublish', function () {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.path).to.eq('test/simulate.txt');
-          publisher.client.headFile('/test/simulate.txt', function(err, res) {
-            expect(res.statusCode).to.eq(404);
-            done()
+          publisher.client.headObject({ Key: '/test/simulate.txt' }, function(err) {
+            expect(err.statusCode).to.eq(404);
+            done();
           });
         }));
 
@@ -303,19 +286,28 @@ describe('gulp-awspublish', function () {
 
     // remove files
     before(function(done) {
-      publisher.client.deleteMultiple([
+      var deleteParams = awspublish._buildDeleteMultiple([
         'test/hello.txt',
         'test/hello2.txt',
-        'test/hello.txt.gz'
-      ], done);
+        'test/hello.txtgz'
+      ]);
+      publisher.client.deleteObjects(deleteParams, done);
     });
 
     // add some dummy file
     ['bar', 'foo/1', 'foo/2', 'foo/3'].forEach(function (name) {
-      var filename = name + '.txt',
-          headers = {'Content-Type': 'text/plain; charset=utf-8'};
+
+      var file = {
+        s3: {
+          path: name + '.txt',
+          headers: {'Content-Type': 'text/plain; charset=utf-8'}
+        },
+        contents: new Buffer('hello world')
+      };
+
       before(function(done) {
-        publisher.client.putBuffer(name, filename, headers, done);
+        var params = awspublish._toAwsParams(file);
+        publisher.client.putObject(params, done);
       });
     });
 
