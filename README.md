@@ -26,7 +26,7 @@ var awspublish = require('gulp-awspublish');
 gulp.task('publish', function() {
 
   // create a new publisher
-  var publisher = awspublish.create({ key: '...',  secret: '...', bucket: '...' });
+  var publisher = awspublish.create({ bucket: '...' });
 
   // define custom headers
   var headers = {
@@ -58,6 +58,9 @@ gulp.task('publish', function() {
 // ...
 ```
 
+* Note: If you follow the [aws-sdk suggestions](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html) for
+  providing your credentials you don't need to pass them in to create the publisher.
+
 ## Testing
 
 add an aws-credentials.json json file to the project directory
@@ -83,8 +86,12 @@ Available options:
 ### awspublish.create(options)
 
 Create a Publisher.
-Options are passed to knox to create a s3 client.
-Please see [knox](https://github.com/LearnBoost/knox#client-creation-options) for more details about these options
+Options are used to create an `aws-sdk` S3 client. At a minimum you must pass
+a `bucket` option, to define the site bucket. If you are using the [aws-sdk suggestions](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html) for credentials you do not need
+to provide anything else.
+
+Also supports credentials specified in the old [knox](https://github.com/LearnBoost/knox#client-creation-options)
+format, a `profile` property for choosing a specific set of shared AWS creds, or and `accessKeyId` and `secretAccessKey` provided explicitly.
 
 #### Publisher.publish([headers], [options])
 
@@ -137,7 +144,7 @@ gulp.src('./public/*')
 
 #### Publisher.client
 
-The knox client object exposed to let you do other s3 operations.
+The `aws-sdk` S3 client is exposed to let you do other s3 operations.
 
 ### awspublish.reporter([options])
 
