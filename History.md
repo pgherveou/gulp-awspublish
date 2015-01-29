@@ -1,4 +1,9 @@
 
+1.0.0 / 2015-01-29
+==================
+
+  * refactored to use aws-sdk instead of knox pull request #38 from ronik-design
+
 0.0.24 / 2015-01-06
 ==================
 
