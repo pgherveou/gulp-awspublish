@@ -73,6 +73,7 @@ describe('gulp-awspublish', function () {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].path).to.eq('/test/hello.txt.gz');
+          expect(files[0].unzipPath).to.eq('/test/hello.txt');
           expect(files[0].s3.path).to.eq('test/hello.txt.gz');
           expect(files[0].s3.headers['Content-Encoding']).to.eq('gzip');
 
@@ -102,6 +103,7 @@ describe('gulp-awspublish', function () {
         .pipe(es.writeArray(function(err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
+          expect(files[0].s3.headers['Content-Type']).to.eq('text/plain; charset=utf-8');
           publisher.client.headObject({ Key: 'test/hello.txt.gz' }, function(err, res) {
             expect(res.ETag).to.exist;
             done(err);
