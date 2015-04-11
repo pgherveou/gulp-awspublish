@@ -83,6 +83,11 @@ Options are used to create an `aws-sdk` S3 client. At a minimum you must pass
 a `bucket` option, to define the site bucket. If you are using the [aws-sdk suggestions](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html) for credentials you do not need
 to provide anything else.
 
+You may pass an `expires` option. If this is set, `Expires` and `Cache-Control`
+headers will be set for objects uploaded to S3. The `expires` option must be an
+integer, and it should be to the number of seconds the object should be cached
+by clients.
+
 Also supports credentials specified in the old [knox](https://github.com/LearnBoost/knox#client-creation-options)
 format, a `profile` property for choosing a specific set of shared AWS creds, or and `accessKeyId` and `secretAccessKey` provided explicitly.
 
