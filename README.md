@@ -18,21 +18,21 @@ var awspublish = require('gulp-awspublish');
 
 gulp.task('publish', function() {
 
-  // create a new publisher (the aws sdk will get credentials automatically)
-  // http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html
-  var publisher = awspublish.create({ 
-     "bucket": "...",
-     "region": "..."
-   });
+  // create a new publisher using S3 options
+  // http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property
+  var publisher = awspublish.create({
+    params: {
+      Bucket: '...'
+    }
+  });
 
   // define custom headers
   var headers = {
-     'Cache-Control': 'max-age=315360000, no-transform, public'
-     // ...
-   };
+    'Cache-Control': 'max-age=315360000, no-transform, public'
+    // ...
+  };
 
   return gulp.src('./public/*.js')
-
      // gzip, Set Content-Encoding headers and add .gz extension
     .pipe(awspublish.gzip({ ext: '.gz' }))
 
@@ -64,10 +64,12 @@ add an aws-credentials.json json file to the project directory
 with your bucket credentials, then run mocha.
 
 ```json
- {
-  "key": "...",
-  "secret": "...",
-  "bucket": "..."
+{
+  "params": {
+    "Bucket": "..."
+  },
+  "accessKeyId": "...",
+  "secretAccessKey": "..."
 }
 ```
 

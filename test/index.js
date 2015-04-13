@@ -15,12 +15,11 @@ describe('gulp-awspublish', function () {
   this.timeout(10000);
 
   var credentials = JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8')),
-      publisher = awspublish.create(credentials),
-      cacheFile = '.awspublish-' + publisher.client.bucket;
+      publisher = awspublish.create(credentials);
 
   // remove files
   before(function(done) {
-    try { fs.unlinkSync(cacheFile); } catch (err) {}
+    try { fs.unlinkSync(publisher.getCacheFilename()); } catch (err) {}
     publisher._cache = {};
 
     var deleteParams = awspublish._buildDeleteMultiple([
@@ -38,7 +37,7 @@ describe('gulp-awspublish', function () {
       var badCredentials, badPublisher, stream;
 
       badCredentials = clone(credentials);
-      badCredentials.bucket = 'fake-bucket';
+      badCredentials.params.Bucket = 'fake-bucket';
       badPublisher = awspublish.create(badCredentials),
       stream = badPublisher.publish();
 
