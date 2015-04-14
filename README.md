@@ -19,7 +19,12 @@ var awspublish = require('gulp-awspublish');
 gulp.task('publish', function() {
 
   // create a new publisher
-  var publisher = awspublish.create({ bucket: '...' });
+  var publisher = awspublish.create({ 
+     "key": "...",
+     "secret": "...",
+     "bucket": "...",
+     "region": "..."
+   });
 
   // define custom headers
   var headers = {
