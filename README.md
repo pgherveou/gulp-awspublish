@@ -18,10 +18,9 @@ var awspublish = require('gulp-awspublish');
 
 gulp.task('publish', function() {
 
-  // create a new publisher
+  // create a new publisher (the aws sdk will get credentials automatically)
+  // http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html
   var publisher = awspublish.create({ 
-     "key": "...",
-     "secret": "...",
      "bucket": "...",
      "region": "..."
    });
