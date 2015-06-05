@@ -112,6 +112,8 @@ Files that go through the stream receive extra properties:
     - Content-Type
     - Content-Length
 
+> Note: `publish` will never delete files remotely. To clean up unused remote files use `sync`.
+
 #### publisher.cache()
 
 Create a through stream that create or update a cache file using file s3 path and file etag.
