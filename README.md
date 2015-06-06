@@ -199,6 +199,23 @@ gulp
   .pipe(awspublish.reporter());
 ```
 
+### upload both gzipped and plain files in one stream
+
+You can use the [`merge-stream`](https://github.com/grncdr/merge-stream) plugin
+to upload two streams in parallel, allowing `sync` to work with mixed file
+types
+
+```js
+var merge = require('merge-stream');
+var gzip = gulp.src('public/**/*.js').pipe(awspublish.gzip());
+var plain = gulp.src([ 'public/**/*', '!public/**/*.js' ]);
+
+merge(gzip, plain)
+  .pipe(publisher.publish())
+  .pipe(publisher.sync())
+  .pipe(awspublish.reporter());
+```
+
 ## Plugins
 
 ### gulp-awspublish-router
