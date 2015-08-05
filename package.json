@@ -28,6 +28,7 @@
     "aws-sdk": "^2.1.16",
     "clone": "0.x",
     "gulp-util": "2.x",
+    "lodash": "^3.10.1",
     "mime": "1.x",
     "pad-component": "0.x",
     "pascal-case": "^1.1.0",
