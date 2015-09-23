@@ -89,6 +89,7 @@ create a through stream, that gzip file and add Content-Encoding header.
 
 Available options:
   - ext: file extension to add to gzipped file (eg: { ext: '.gz' })
+  - Any options that can be passed to [zlib.gzip](https://nodejs.org/api/zlib.html#zlib_options)
 
 ### awspublish.create(options)
 
