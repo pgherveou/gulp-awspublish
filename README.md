@@ -60,6 +60,7 @@ gulp.task('publish', function() {
 
 * Note: In order for publish to work on S3, your policiy has to allow the following S3 actions:
 - "s3:PutObject",
+- "s3:PutObjectAcl" (if setting an ACL, which is done by default),
 - "s3:GetObject",
 - "s3:DeleteObject",
 - "s3:ListMultipartUploadParts",
