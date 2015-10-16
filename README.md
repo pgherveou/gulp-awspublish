@@ -69,12 +69,12 @@ gulp.task('publish', function() {
 ## Testing
 
 add an aws-credentials.json json file to the project directory
-with your bucket credentials, then run mocha.
+with your **testing bucket** credentials, then run mocha.
 
 ```json
 {
   "params": {
-    "Bucket": "..."
+    "Bucket": "<test-bucket>"
   },
   "accessKeyId": "...",
   "secretAccessKey": "..."
