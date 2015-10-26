@@ -88,6 +88,8 @@ with your **testing bucket** credentials, then run mocha.
 
 create a through stream, that gzip file and add Content-Encoding header.
 
+* Note: Node version 0.12.x or later is required in order to use `awspublish.gzip`. If you need an older node engine to work with gzipping, you can use [v2.0.2](https://github.com/pgherveou/gulp-awspublish/tree/v2.0.2).
+
 Available options:
   - ext: file extension to add to gzipped file (eg: { ext: '.gz' })
   - Any options that can be passed to [zlib.gzip](https://nodejs.org/api/zlib.html#zlib_options)

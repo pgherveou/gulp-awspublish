@@ -47,7 +47,7 @@
     "mocha-lcov-reporter": "*"
   },
   "engines": {
-    "node": ">=0.8.0",
+    "node": ">=0.12.0",
     "npm": ">=1.2.10"
   },
   "licenses": [
