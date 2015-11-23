@@ -21,6 +21,7 @@ gulp.task('publish', function() {
   // create a new publisher using S3 options
   // http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property
   var publisher = awspublish.create({
+    region: 'your-region-id',
     params: {
       Bucket: '...'
     }
