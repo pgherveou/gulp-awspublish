@@ -26,12 +26,12 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1.16",
-    "clone": "0.x",
-    "gulp-util": "2.x",
-    "mime": "1.x",
-    "pad-component": "0.x",
+    "clone": "^0.2.0",
+    "gulp-util": "^2.2.20",
+    "mime": "^1.3.4",
+    "pad-component": "0.0.1",
     "pascal-case": "^1.1.0",
-    "through2": "0.x",
+    "through2": "^0.6.5",
     "vinyl": "^0.4.6",
     "xml-json": "^2.0.2"
   },
