@@ -25,7 +25,7 @@ describe('gulp-awspublish', function () {
     var deleteParams = awspublish._buildDeleteMultiple([
       'test/hello.txt',
       'test/hello2.txt',
-      'test/hello.txtgz'
+      'test/hello.txt.gz'
     ]);
 
     publisher.client.deleteObjects(deleteParams, done);
@@ -290,7 +290,7 @@ describe('gulp-awspublish', function () {
       var deleteParams = awspublish._buildDeleteMultiple([
         'test/hello.txt',
         'test/hello2.txt',
-        'test/hello.txtgz'
+        'test/hello.txt.gz'
       ]);
       publisher.client.deleteObjects(deleteParams, done);
     });
@@ -310,6 +310,17 @@ describe('gulp-awspublish', function () {
         var params = awspublish._toAwsParams(file);
         publisher.client.putObject(params, done);
       });
+    });
+
+    it('should iterate all S3 objects', function(done) {
+      var stream = awspublish._listAllKeys(publisher.client, 2, '');
+
+      stream
+        .pipe(es.writeArray(function(err, keys) {
+          expect(err).not.to.exist;
+          expect(keys.join(' ')).to.eq('bar.txt foo/1.txt foo/2.txt foo/3.txt');
+          done(err);
+        }));
     });
 
     it('should sync bucket with published data', function(done) {

@@ -32,8 +32,7 @@
     "pad-component": "0.x",
     "pascal-case": "^1.1.0",
     "through2": "0.x",
-    "vinyl": "^0.4.6",
-    "xml-json": "^2.0.2"
+    "vinyl": "^0.4.6"
   },
   "devDependencies": {
     "chai": "*",
