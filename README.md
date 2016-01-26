@@ -235,6 +235,10 @@ merge(gzip, plain)
 A router for defining file-specific rules
 https://www.npmjs.org/package/gulp-awspublish-router
 
+### gulp-cloudfront-invalidate-aws-publish
+Invalidate cloudfront cache based on output from awspublish
+https://www.npmjs.com/package/gulp-cloudfront-invalidate-aws-publish
+
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
