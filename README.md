@@ -59,14 +59,39 @@ gulp.task('publish', function() {
 * Note: If you follow the [aws-sdk suggestions](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html) for
   providing your credentials you don't need to pass them in to create the publisher.
 
-* Note: In order for publish to work on S3, your policiy has to allow the following S3 actions:
-- "s3:PutObject",
-- "s3:PutObjectAcl" (if setting an ACL, which is done by default),
-- "s3:GetObject",
-- "s3:DeleteObject",
-- "s3:ListMultipartUploadParts",
-- "s3:AbortMultipartUpload",
-- "s3:ListBucket"
+* Note: In order for publish to work on S3, your policy has to allow the following S3 actions:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::BUCKETNAME"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:GetObject",
+                "s3:GetObjectAcl",
+                "s3:DeleteObject",
+                "s3:ListMultipartUploadParts",
+                "s3:AbortMultipartUpload"
+            ],
+            "Resource": [
+                "arn:aws:s3:::BUCKETNAME/*"
+            ]
+        }
+    ]
+}
+```
 
 ## Testing
 
