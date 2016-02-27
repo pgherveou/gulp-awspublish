@@ -123,12 +123,42 @@ Available options:
 ### awspublish.create(options)
 
 Create a Publisher.
-Options are used to create an `aws-sdk` S3 client. At a minimum you must pass
-a `bucket` option, to define the site bucket. If you are using the [aws-sdk suggestions](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html) for credentials you do not need
-to provide anything else.
+Options are used to create an `aws-sdk` S3 client. At a minimum you must pass a `bucket` option, to define the site bucket. You can find all available options in the [AWS SDK documentation](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property).
 
-Also supports credentials specified in the old [knox](https://github.com/LearnBoost/knox#client-creation-options)
-format, a `profile` property for choosing a specific set of shared AWS creds, or and `accessKeyId` and `secretAccessKey` provided explicitly.
+#### Credentials
+
+By default, gulp-awspublish uses the credential chain specified in the AWS [docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
+
+Here are some example credential configurations:
+
+Hardcoded credentials (**Note**: We recommend you **not** hard-code credentials inside an application. Use this method only for small personal scripts or for testing purposes.):
+
+```
+var publisher = awspublish.create({
+  region: 'your-region-id',
+  params: {
+    Bucket: '...'
+  },
+  accessKeyId: 'akid',
+  secretAccessKey: 'secret'
+});
+```
+
+Using a profile by name from `~/.aws/credentials`:
+
+```
+var AWS = require('aws-sdk');
+
+var publisher = awspublish.create({
+  region: 'your-region-id',
+  params: {
+    Bucket: '...'
+  },
+  credentials: new AWS.SharedIniFileCredentials({profile: 'myprofile'})
+});
+```
+
+Instead of putting anything in the configuration object, you can also provide the following environment variables: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`, `AWS_PROFILE`. You can also define a `[default]` profile in `~/.aws/credentials` which the SDK will use transparently without needing to set anything.
 
 #### Publisher.publish([headers], [options])
 
