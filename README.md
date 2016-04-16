@@ -26,8 +26,7 @@ gulp.task('publish', function() {
       Bucket: '...'
     }
   }, {
-    cacheRoot: 'your-cache-location',
-    cacheHidden: Boolean
+    cacheFile: 'your-cache-location'
   });
 
   // define custom headers
@@ -128,7 +127,7 @@ Available options:
 Create a Publisher.
 The config object is used to create an `aws-sdk` S3 client. At a minimum you must pass a `Bucket` key, to define the site bucket. You can find all available options in the [AWS SDK documentation](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property).
 
-The options object allows you to define the location of the cached hash digests and determine if they are hidden or not. By default, they will be saved in your projects root folder in a hidden file called '.awspublish-' + 'name-of-your-bucket'.
+The options object allows you to define the location of the cached hash digests. By default, they will be saved in your projects root folder in a hidden file called '.awspublish-' + 'name-of-your-bucket'.
 
 #### Credentials
 
