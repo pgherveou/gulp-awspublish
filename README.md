@@ -234,7 +234,7 @@ gulp.src('./public/*')
 
 ## Examples
 
-### rename file & directory
+### [Rename file & directory](examples/rename.js)
 
 You can use `gulp-rename` to rename your files on s3
 
@@ -254,7 +254,7 @@ gulp.src('examples/fixtures/*.js')
 // [gulp] [create] s3-examples/foo-s3.js
 ```
 
-### upload file in parallel
+### [Upload file in parallel](examples/concurrent.js)
 
 You can use `concurrent-transform` to upload files in parallel to your amazon bucket
 
@@ -267,7 +267,7 @@ gulp
   .pipe(awspublish.reporter());
 ```
 
-### upload both gzipped and plain files in one stream
+### Upload both gzipped and plain files in one stream
 
 You can use the [`merge-stream`](https://github.com/grncdr/merge-stream) plugin
 to upload two streams in parallel, allowing `sync` to work with mixed file
