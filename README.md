@@ -25,6 +25,8 @@ gulp.task('publish', function() {
     params: {
       Bucket: '...'
     }
+  }, {
+    cacheFile: 'your-cache-location'
   });
 
   // define custom headers
@@ -120,10 +122,12 @@ Available options:
   - ext: file extension to add to gzipped file (eg: { ext: '.gz' })
   - Any options that can be passed to [zlib.gzip](https://nodejs.org/api/zlib.html#zlib_options)
 
-### awspublish.create(options)
+### awspublish.create(config, options)
 
 Create a Publisher.
-Options are used to create an `aws-sdk` S3 client. At a minimum you must pass a `bucket` option, to define the site bucket. You can find all available options in the [AWS SDK documentation](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property).
+The config object is used to create an `aws-sdk` S3 client. At a minimum you must pass a `Bucket` key, to define the site bucket. You can find all available options in the [AWS SDK documentation](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property).
+
+The options object allows you to define the location of the cached hash digests. By default, they will be saved in your projects root folder in a hidden file called '.awspublish-' + 'name-of-your-bucket'.
 
 #### Credentials
 
