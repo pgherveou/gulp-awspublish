@@ -97,16 +97,20 @@ gulp.task('publish', function() {
 
 ## Testing
 
-add an aws-credentials.json json file to the project directory
-with your **testing bucket** credentials, then run mocha.
+1. Create an S3 bucket which will be used for the tests. Optionally create an IAM user for running the tests.
+2. Set the buckets Permission, so it can be edited by the IAM user who will run the tests.
+3. Add an aws-credentials.json file to the project directory with the name of your testing buckets
+and the credentials of the user who will run the tests.
+4. Run `npm test`
 
 ```json
 {
   "params": {
-    "Bucket": "<test-bucket>"
+    "Bucket": "<test-bucket-name>"
   },
-  "accessKeyId": "...",
-  "secretAccessKey": "..."
+  "accessKeyId": "<your-access-key-id>",
+  "secretAccessKey": "<your-secret-access-key>",
+  "signatureVersion": "v3"
 }
 ```
 
@@ -122,12 +126,12 @@ Available options:
   - ext: file extension to add to gzipped file (eg: { ext: '.gz' })
   - Any options that can be passed to [zlib.gzip](https://nodejs.org/api/zlib.html#zlib_options)
 
-### awspublish.create(config, options)
+### awspublish.create(AWSConfig, cacheOptions)
 
 Create a Publisher.
-The config object is used to create an `aws-sdk` S3 client. At a minimum you must pass a `Bucket` key, to define the site bucket. You can find all available options in the [AWS SDK documentation](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property).
+The AWSConfig object is used to create an `aws-sdk` S3 client. At a minimum you must pass a `Bucket` key, to define the site bucket. You can find all available options in the [AWS SDK documentation](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property).
 
-The options object allows you to define the location of the cached hash digests. By default, they will be saved in your projects root folder in a hidden file called '.awspublish-' + 'name-of-your-bucket'.
+The cacheOptions object allows you to define the location of the cached hash digests. By default, they will be saved in your projects root folder in a hidden file called '.awspublish-' + 'name-of-your-bucket'.
 
 #### Credentials
 
