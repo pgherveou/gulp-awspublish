@@ -32,7 +32,7 @@ describe('gulp-awspublish', function () {
 
     publisher.client.deleteObjects(deleteParams, done);
   });
-  
+
   after(function(){
     try { fs.unlinkSync(path.join(__dirname, publisher.getCacheFilename())); } catch (err) {}
     try { fs.unlinkSync(path.join(__dirname, '../testCacheFile')); } catch (err) { }
@@ -312,7 +312,6 @@ describe('gulp-awspublish', function () {
         .pipe(es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
-          console.log(files);
           expect(files[0].s3.path).to.eq('test/simulate.txt');
           publisher.client.headObject({ Key: '/test/simulate.txt' }, function (err) {
             expect(err.statusCode).to.eq(404);
