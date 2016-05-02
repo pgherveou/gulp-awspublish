@@ -357,7 +357,7 @@ describe('gulp-awspublish', function () {
       var stream = gutil.noop();
 
       stream
-        .pipe(publisher.sync({ prefix: 'foo'}))
+        .pipe(publisher.sync('foo'))
         .pipe(es.writeArray(function (err, arr) {
           expect(err).to.not.exist;
           var deleted = arr.filter(function (file) {
@@ -378,7 +378,7 @@ describe('gulp-awspublish', function () {
       var stream = gutil.noop();
 
       stream
-        .pipe(publisher.sync({ whitelist: [/foo/]}))
+        .pipe(publisher.sync('', [/foo/]))
         .pipe(es.writeArray(function (err, arr) {
           expect(err).to.not.exist;
 
@@ -401,7 +401,7 @@ describe('gulp-awspublish', function () {
       var stream = gutil.noop();
 
       stream
-        .pipe(publisher.sync({ whitelist: ['foo/2.txt', 'fooo/3.txt']}))
+        .pipe(publisher.sync('', ['foo/2.txt', 'fooo/3.txt']))
         .pipe(es.writeArray(function (err, arr) {
           expect(err).to.not.exist;
 

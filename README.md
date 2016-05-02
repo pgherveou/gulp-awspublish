@@ -197,12 +197,11 @@ Consecutive runs of publish will use this file to avoid reuploading identical fi
 
 Cache file is save in the current working dir and is named `.awspublish-<bucket>`. The cache file is flushed to disk every 10 files just to be safe.
 
-#### Publisher.sync([options])
+#### Publisher.sync([prefix], [whitelistedFiles])
 
 create a transform stream that delete old files from the bucket.
-Available options:
   - prefix: prefix to sync a specific directory
-  - whitelist: array that can contain regular expressions or strings that match against filenames that
+  - whitelistedFiles: array that can contain regular expressions or strings that match against filenames that
                should never be deleted from the bucket.
 
 e.g.
