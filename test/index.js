@@ -32,7 +32,7 @@ describe('gulp-awspublish', function () {
 
     publisher.client.deleteObjects(deleteParams, done);
   });
-  
+
   after(function(){
     try { fs.unlinkSync(path.join(__dirname, publisher.getCacheFilename())); } catch (err) {}
     try { fs.unlinkSync(path.join(__dirname, '../testCacheFile')); } catch (err) { }
@@ -312,7 +312,6 @@ describe('gulp-awspublish', function () {
         .pipe(es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
-          console.log(files);
           expect(files[0].s3.path).to.eq('test/simulate.txt');
           publisher.client.headObject({ Key: '/test/simulate.txt' }, function (err) {
             expect(err.statusCode).to.eq(404);
@@ -331,7 +330,8 @@ describe('gulp-awspublish', function () {
       var deleteParams = awspublish._buildDeleteMultiple([
         'test/hello.txt',
         'test/hello2.txt',
-        'test/hello.txtgz'
+        'test/hello.txtgz',
+        'test/hello.txt.gz'
       ]);
       publisher.client.deleteObjects(deleteParams, done);
     });
@@ -347,7 +347,7 @@ describe('gulp-awspublish', function () {
         contents: new Buffer('hello world')
       };
 
-      before(function (done) {
+      beforeEach(function (done) {
         var params = awspublish._toAwsParams(file);
         publisher.client.putObject(params, done);
       });
@@ -367,6 +367,52 @@ describe('gulp-awspublish', function () {
           }).sort().join(' ');
 
           expect(deleted).to.eq('foo/2.txt foo/3.txt');
+          done(err);
+        }));
+
+      stream.write({ s3: { path: 'foo/1.txt' } });
+      stream.end();
+    });
+
+    it('should not delete files that match a whitelist regex', function (done) {
+      var stream = gutil.noop();
+
+      stream
+        .pipe(publisher.sync('', [/foo/]))
+        .pipe(es.writeArray(function (err, arr) {
+          expect(err).to.not.exist;
+
+          var deleted = arr.filter(function (file) {
+            return file.s3 && file.s3.state === 'delete';
+          })
+
+          // foo/1.txt should not be deleted because it was in the stream
+          // foo/2.txt foo/3.txt should not be deleted because they match against the regex in the whitelist
+          // bar should be deleted
+          expect(deleted.length).to.eq(1);
+          done(err);
+        }));
+
+      stream.write({ s3: { path: 'foo/1.txt' } });
+      stream.end();
+    });
+
+    it('should not delete files that match a whitelist string', function (done) {
+      var stream = gutil.noop();
+
+      stream
+        .pipe(publisher.sync('', ['foo/2.txt', 'fooo/3.txt']))
+        .pipe(es.writeArray(function (err, arr) {
+          expect(err).to.not.exist;
+
+          var deleted = arr.filter(function (file) {
+            return file.s3 && file.s3.state === 'delete';
+          })
+
+          // foo/1.txt should not be deleted because it was in the stream
+          // foo/2.txt should not be deleted because it was in the whitelist
+          // bar and foo/3.txt should be deleted
+          expect(deleted.length).to.eq(2);
           done(err);
         }));
 

@@ -197,12 +197,24 @@ Consecutive runs of publish will use this file to avoid reuploading identical fi
 
 Cache file is save in the current working dir and is named `.awspublish-<bucket>`. The cache file is flushed to disk every 10 files just to be safe.
 
-#### Publisher.sync([prefix])
+#### Publisher.sync([prefix], [whitelistedFiles])
 
 create a transform stream that delete old files from the bucket.
-You can speficy a prefix to sync a specific directory.
+  - prefix: prefix to sync a specific directory
+  - whitelistedFiles: array that can contain regular expressions or strings that match against filenames that
+               should never be deleted from the bucket.
 
-> **warning** `sync` will delete files in your bucket that are not in your local folder.
+e.g.
+```js
+// only directory bar will be synced
+// files in folder /foo/bar and file baz.txt will not be removed from the bucket despite not being in your local folder
+gulp.src('./public/*')
+  .pipe(publisher.publish())
+  .pipe(publisher.sync({ prefix: 'bar', whitelist: [/^foo\/bar/, 'baz.txt'] }))
+  .pipe(awspublish.reporter());
+```
+
+> **warning** `sync` will delete files in your bucket that are not in your local folder unless they're whitelisted.
 
 ```js
 // this will publish and sync bucket files with the one in your public directory
