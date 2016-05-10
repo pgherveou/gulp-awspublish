@@ -27,6 +27,7 @@ describe('gulp-awspublish', function () {
     var deleteParams = awspublish._buildDeleteMultiple([
       'test/hello.txt',
       'test/hello2.txt',
+      'test/hello3.txt',
       'test/hello.txtgz'
     ]);
 
@@ -151,6 +152,33 @@ describe('gulp-awspublish', function () {
           expect(files[0].s3.state).to.eq('create');
           expect(files[0].s3.headers['Cache-Control']).to.eq(headers['Cache-Control']);
           expect(files[0].s3.headers['x-amz-acl']).to.eq('public-read');
+          expect(files[0].s3.headers['Content-Type']).to.eq('text/plain; charset=utf-8');
+          expect(files[0].s3.headers['Content-Length']).to.eq(files[0].contents.length);
+          publisher.client.headObject({ Key: 'test/hello.txt' }, function (err, res) {
+            expect(res.ETag).to.exist;
+            done(err);
+          });
+        }));
+
+      stream.end();
+    });
+
+    it('should not send s3 header x-amz-acl if option {noAcl: true}', function (done) {
+
+      var stream = publisher.publish({}, {noAcl: true});
+      stream.write(new gutil.File({
+        path: '/test/hello3.txt',
+        base: '/',
+        contents: new Buffer('hello world')
+      }));
+
+      stream
+        .pipe(es.writeArray(function (err, files) {
+          expect(err).not.to.exist;
+          expect(files).to.have.length(1);
+          expect(files[0].s3.path).to.eq('test/hello3.txt');
+          expect(files[0].s3.state).to.eq('create');
+          expect(files[0].s3.headers).not.contain.keys('x-amz-acl');
           expect(files[0].s3.headers['Content-Type']).to.eq('text/plain; charset=utf-8');
           expect(files[0].s3.headers['Content-Length']).to.eq(files[0].contents.length);
           publisher.client.headObject({ Key: 'test/hello.txt' }, function (err, res) {
@@ -330,6 +358,7 @@ describe('gulp-awspublish', function () {
       var deleteParams = awspublish._buildDeleteMultiple([
         'test/hello.txt',
         'test/hello2.txt',
+        'test/hello3.txt',
         'test/hello.txtgz',
         'test/hello.txt.gz'
       ]);

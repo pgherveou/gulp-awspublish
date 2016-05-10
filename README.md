@@ -174,6 +174,7 @@ Create a through stream, that push files to s3.
 - header: hash of headers to add or override to existing s3 headers.
 - options: optional additional publishing options
   - force: bypass cache / skip
+  - noAcl: do not set x-amz-acl by default
   - simulate: debugging option to simulate s3 upload
   - createOnly: skip file updates
 
