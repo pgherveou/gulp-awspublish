@@ -211,7 +211,7 @@ e.g.
 // files in folder /foo/bar and file baz.txt will not be removed from the bucket despite not being in your local folder
 gulp.src('./public/*')
   .pipe(publisher.publish())
-  .pipe(publisher.sync({ prefix: 'bar', whitelist: [/^foo\/bar/, 'baz.txt'] }))
+  .pipe(publisher.sync('bar', [/^foo\/bar/, 'baz.txt']))
   .pipe(awspublish.reporter());
 ```
 
