@@ -26,7 +26,7 @@ gulp.task('publish', function() {
       Bucket: '...'
     }
   }, {
-    cacheFile: 'your-cache-location'
+    cacheFileName: 'your-cache-location'
   });
 
   // define custom headers
