@@ -31,9 +31,11 @@
     "mime": "^1.3.4",
     "pad-component": "^0.0.1",
     "pascal-case": "^1.1.0",
+    "pumpify": "^1.3.5",
     "through2": "^2.0.1",
     "vinyl": "^0.4.6",
-    "xml-json": "^2.0.2"
+    "xml-nodes": "^0.1.5",
+    "xml-objects": "^1.0.1"
   },
   "devDependencies": {
     "chai": "*",
