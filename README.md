@@ -133,6 +133,10 @@ The AWSConfig object is used to create an `aws-sdk` S3 client. At a minimum you 
 
 The cacheOptions object allows you to define the location of the cached hash digests. By default, they will be saved in your projects root folder in a hidden file called '.awspublish-' + 'name-of-your-bucket'.
 
+#### Adjusting upload timeout
+The AWS client has a default timeout which may be too low when pushing large files (> 50mb).
+To adjust timeout, add `httpOptions: { timeout: 300000 }` to the AWSConfig object.
+
 #### Credentials
 
 By default, gulp-awspublish uses the credential chain specified in the AWS [docs](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
