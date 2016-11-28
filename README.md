@@ -131,7 +131,7 @@ Available options:
 Create a Publisher.
 The AWSConfig object is used to create an `aws-sdk` S3 client. At a minimum you must pass a `Bucket` key, to define the site bucket. You can find all available options in the [AWS SDK documentation](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property).
 
-The cacheOptions object allows you to define the location of the cached hash digests. By default, they will be saved in your projects root folder in a hidden file called '.awspublish-' + 'name-of-your-bucket'.
+The cacheOptions object allows you to define the location of the cached hash digests. Example object: `{cacheFileName: 'your-cache-location'}`. By default, they will be saved in your projects root folder in a hidden file called '.awspublish-' + 'name-of-your-bucket'. 
 
 #### Adjusting upload timeout
 The AWS client has a default timeout which may be too low when pushing large files (> 50mb).
