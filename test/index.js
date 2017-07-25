@@ -163,11 +163,67 @@ describe('gulp-awspublish', function () {
       stream.end();
     });
 
+    it('should create new files on s3 with different headers', function (done) {
+
+			var headers = {
+				"Cache-Control": 'max-age=86400, no-transform, public',
+				"fileFilters": [
+					{
+						"filter": '**/*.txt',
+						"Cache-Control": 'max-age=604800, no-transform, public'
+					},
+					{
+						"filter": ['**/*.jpg', '**/*.png'],
+						"Cache-Control": 'max-age=315360000, no-transform, public'
+					},
+				]
+			};
+
+      var stream = publisher.publish(headers);
+      stream.write(new gutil.File({
+        path: '/test/hello3.txt',
+        base: '/',
+        contents: new Buffer('hello world')
+      }));
+
+      stream.write(new gutil.File({
+        path: '/test/hello4.png',
+        base: '/',
+        contents: new Buffer('hello world')
+      }));
+
+      stream
+        .pipe(es.writeArray(function (err, files) {
+          expect(err).not.to.exist;
+          expect(files).to.have.length(2);
+          expect(files[0].s3.path).to.eq('test/hello3.txt');
+          expect(files[0].s3.state).to.eq('create');
+          expect(files[0].s3.headers['Cache-Control']).to.eq(headers.fileFilters[0]['Cache-Control']);
+          expect(files[0].s3.headers['x-amz-acl']).to.eq('public-read');
+          expect(files[0].s3.headers['Content-Type']).to.eq('text/plain; charset=utf-8');
+          expect(files[0].s3.headers['Content-Length']).to.eq(files[0].contents.length);
+
+          expect(files[1].s3.path).to.eq('test/hello4.png');
+          expect(files[1].s3.state).to.eq('create');
+          expect(files[1].s3.headers['Cache-Control']).to.eq(headers.fileFilters[1]['Cache-Control']);
+          expect(files[1].s3.headers['x-amz-acl']).to.eq('public-read');
+          expect(files[1].s3.headers['Content-Type']).to.eq('image/png');
+          expect(files[1].s3.headers['Content-Length']).to.eq(files[1].contents.length);
+
+          publisher.client.headObject({ Key: 'test/hello3.txt' }, function (err, res) {
+            expect(res.ETag).to.exist;
+            done(err);
+          });
+        }));
+
+      stream.end();
+    });
+
     it('should not send s3 header x-amz-acl if option {noAcl: true}', function (done) {
 
       var stream = publisher.publish({}, {noAcl: true});
       stream.write(new gutil.File({
-        path: '/test/hello3.txt',
+        path: '/test/hello5.txt',
         base: '/',
         contents: new Buffer('hello world')
       }));
@@ -176,12 +232,12 @@ describe('gulp-awspublish', function () {
         .pipe(es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
-          expect(files[0].s3.path).to.eq('test/hello3.txt');
+          expect(files[0].s3.path).to.eq('test/hello5.txt');
           expect(files[0].s3.state).to.eq('create');
           expect(files[0].s3.headers).not.contain.keys('x-amz-acl');
           expect(files[0].s3.headers['Content-Type']).to.eq('text/plain; charset=utf-8');
           expect(files[0].s3.headers['Content-Length']).to.eq(files[0].contents.length);
-          publisher.client.headObject({ Key: 'test/hello.txt' }, function (err, res) {
+          publisher.client.headObject({ Key: 'test/hello5.txt' }, function (err, res) {
             expect(res.ETag).to.exist;
             done(err);
           });
@@ -359,6 +415,8 @@ describe('gulp-awspublish', function () {
         'test/hello.txt',
         'test/hello2.txt',
         'test/hello3.txt',
+        'test/hello4.png',
+        'test/hello5.txt',
         'test/hello.txtgz',
         'test/hello.txt.gz'
       ]);

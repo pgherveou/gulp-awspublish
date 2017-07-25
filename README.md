@@ -95,6 +95,27 @@ gulp.task('publish', function() {
 }
 ```
 
+## Custom headers
+
+You can add different headers to different files using glob filter syntax:
+
+```
+	var headers = {
+		"Cache-Control": 'max-age=86400, no-transform, public',
+		"fileFilters": [
+			{
+				"filter": '**/*.txt',
+				"Cache-Control": 'max-age=604800, no-transform, public'
+			},
+			{
+				"filter": ['**/*.jpg', '**/*.png'],
+				"Cache-Control": 'max-age=315360000, no-transform, public'
+			},
+		]
+	};
+
+```
+
 ## Testing
 
 1. Create an S3 bucket which will be used for the tests. Optionally create an IAM user for running the tests.
