@@ -6,7 +6,8 @@ var fs = require('fs'),
   zlib = require('zlib'),
   chai = require('chai'),
   es = require('event-stream'),
-  gutil = require('gulp-util'),
+  Vinyl = require('vinyl'),
+  through = require('through2'),
   clone = require('clone'),
   awspublish = require('../'),
   expect = chai.expect;
@@ -55,7 +56,7 @@ describe('gulp-awspublish', function () {
         done();
       });
 
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: new Buffer('hello world 2')
@@ -68,7 +69,7 @@ describe('gulp-awspublish', function () {
 
       var gzip = awspublish.gzip({ ext: '.gz' });
       var contents = new Buffer('hello world');
-      var srcFile = new gutil.File({
+      var srcFile = new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: contents
@@ -101,7 +102,7 @@ describe('gulp-awspublish', function () {
         stream = gzip.pipe(publisher.publish());
 
 
-      gzip.write(new gutil.File({
+      gzip.write(new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: new Buffer('hello world')
@@ -132,13 +133,13 @@ describe('gulp-awspublish', function () {
       };
 
       var stream = publisher.publish(headers);
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: new Buffer('hello world')
       }));
 
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello2.txt',
         base: '/',
         contents: new Buffer('hello world')
@@ -166,7 +167,7 @@ describe('gulp-awspublish', function () {
     it('should not send s3 header x-amz-acl if option {noAcl: true}', function (done) {
 
       var stream = publisher.publish({}, {noAcl: true});
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello3.txt',
         base: '/',
         contents: new Buffer('hello world')
@@ -199,7 +200,7 @@ describe('gulp-awspublish', function () {
         done(err);
       }));
 
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: new Buffer('hello world 2')
@@ -219,7 +220,7 @@ describe('gulp-awspublish', function () {
         done(err);
       }));
 
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: new Buffer('hello world 2')
@@ -237,7 +238,7 @@ describe('gulp-awspublish', function () {
         done(err);
       }));
 
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: new Buffer('hello world 2')
@@ -278,7 +279,7 @@ describe('gulp-awspublish', function () {
       var stream = publisher.publish(),
         cache = stream.pipe(publisher.cache());
 
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: new Buffer('hello world 2')
@@ -301,7 +302,7 @@ describe('gulp-awspublish', function () {
         done(err);
       }));
 
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: new Buffer('hello world 2')
@@ -319,7 +320,7 @@ describe('gulp-awspublish', function () {
         done(err);
       }));
 
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/hello.txt',
         base: '/',
         contents: new Buffer('hello world 2')
@@ -330,7 +331,7 @@ describe('gulp-awspublish', function () {
 
     it('should simulate file upload on s3', function (done) {
       var stream = publisher.publish(null, { simulate: true });
-      stream.write(new gutil.File({
+      stream.write(new Vinyl({
         path: '/test/simulate.txt',
         base: '/',
         contents: new Buffer('simulate')
@@ -383,7 +384,7 @@ describe('gulp-awspublish', function () {
     });
 
     it('should sync bucket with published data', function (done) {
-      var stream = gutil.noop();
+      var stream = through.obj();
 
       stream
         .pipe(publisher.sync('foo'))
@@ -404,7 +405,7 @@ describe('gulp-awspublish', function () {
     });
 
     it('should not delete files that match a whitelist regex', function (done) {
-      var stream = gutil.noop();
+      var stream = through.obj();
 
       stream
         .pipe(publisher.sync('', [/foo/]))
@@ -427,7 +428,7 @@ describe('gulp-awspublish', function () {
     });
 
     it('should not delete files that match a whitelist string', function (done) {
-      var stream = gutil.noop();
+      var stream = through.obj();
 
       stream
         .pipe(publisher.sync('', ['foo/2.txt', 'fooo/3.txt']))

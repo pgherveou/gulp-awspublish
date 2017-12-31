@@ -1,6 +1,5 @@
 var fs = require('fs');
 var gulp = require('gulp');
-var gutil = require('gulp-util');
 var awspublish = require('../');
 
 var credentials = JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8'));
