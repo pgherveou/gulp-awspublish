@@ -108,9 +108,11 @@ and the credentials of the user who will run the tests.
   "params": {
     "Bucket": "<test-bucket-name>"
   },
-  "accessKeyId": "<your-access-key-id>",
-  "secretAccessKey": "<your-secret-access-key>",
-  "signatureVersion": "v3"
+  "credentials": {
+    "accessKeyId": "<your-access-key-id>",
+    "secretAccessKey": "<your-secret-access-key>",
+    "signatureVersion": "v3"
+  }
 }
 ```
 
