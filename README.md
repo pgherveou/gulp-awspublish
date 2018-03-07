@@ -183,6 +183,7 @@ Create a through stream, that push files to s3.
   - noAcl: do not set x-amz-acl by default
   - simulate: debugging option to simulate s3 upload
   - createOnly: skip file updates
+  - newFile: create new file instead of skipping file updates
 
 Files that go through the stream receive extra properties:
 
