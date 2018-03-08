@@ -1,5 +1,5 @@
 # gulp-awspublish
-[![NPM version][npm-image]][npm-url] [![Dependency Status][depstat-image]][depstat-url] [![Mentions][mentions-image]][mentions-url] 
+[![NPM version][npm-image]][npm-url] [![Dependency Status][depstat-image]][depstat-url]
 
 > awspublish plugin for [gulp](https://github.com/wearefractal/gulp)
 
@@ -326,10 +326,7 @@ https://www.npmjs.com/package/gulp-cloudfront-invalidate-aws-publish
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
 
 [npm-url]: https://npmjs.org/package/gulp-awspublish
-[npm-image]: https://badge.fury.io/js/gulp-awspublish.png
+[npm-image]: https://badge.fury.io/js/gulp-awspublish.svg
 
 [depstat-url]: https://david-dm.org/pgherveou/gulp-awspublish
-[depstat-image]: https://david-dm.org/pgherveou/gulp-awspublish.png
-
-[mentions-url]: http://107.170.57.103/pgherveou/gulp-awspublish
-[mentions-image]: http://107.170.57.103/pgherveou/gulp-awspublish.svg
+[depstat-image]: https://david-dm.org/pgherveou/gulp-awspublish.svg
