@@ -9,7 +9,7 @@ gulp
   .src('./examples/**/*.js')
   .pipe(publisher.publish())
   .pipe(publisher.sync())
-  .pipe(awspublish.reporter())
+  .pipe(awspublish.reporter());
 
 // log [create] concurrent.js
 // log [create] events.js

@@ -16,7 +16,7 @@ gulp
 
   .on('finish', function() {
     console.log('finish...');
-  })
+  });
 
 
 

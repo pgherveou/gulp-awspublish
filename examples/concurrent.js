@@ -1,6 +1,6 @@
 var fs = require('fs');
 var gulp = require('gulp');
-var parallelize = require("concurrent-transform");
+var parallelize = require('concurrent-transform');
 var awspublish = require('../');
 
 var credentials = JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8'));
