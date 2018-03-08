@@ -350,6 +350,26 @@ describe('gulp-awspublish', function () {
 
       stream.end();
     });
+
+    it('should publish files with unknown extension', function (done) {
+      var stream = publisher.publish();
+      stream.pipe(es.writeArray(function (err, files) {
+        expect(err).not.to.exist;
+        expect(files).to.have.length(1);
+        expect(files[0].s3.path).to.eq('test/hello.unknown');
+        expect(files[0].s3.headers['Content-Type']).to.eq('application/octet-stream');
+        expect(files[0].s3.headers['Content-Length']).to.eq(files[0].contents.length);
+        done(err);
+      }));
+
+      stream.write(new Vinyl({
+        path: '/test/hello.unknown',
+        base: '/',
+        contents: new Buffer('hello world')
+      }));
+
+      stream.end();
+    });
   });
 
   describe('Sync', function () {
@@ -361,7 +381,8 @@ describe('gulp-awspublish', function () {
         'test/hello2.txt',
         'test/hello3.txt',
         'test/hello.txtgz',
-        'test/hello.txt.gz'
+        'test/hello.txt.gz',
+        'test/hello.unknown'
       ]);
       publisher.client.deleteObjects(deleteParams, done);
     });
