@@ -1,4 +1,4 @@
-/* global describe, before, it */
+/* global describe, before, it, after, beforeEach */
 'use strict';
 
 var fs = require('fs'),
@@ -253,7 +253,7 @@ describe('gulp-awspublish', function () {
         cache = stream.pipe(publisherWithDefaultCache.cache());
 
       cache.on('finish', function () {
-        expect(publisherWithDefaultCache._cacheFile).to.equal('.awspublish-' + credentials.params.Bucket)
+        expect(publisherWithDefaultCache._cacheFile).to.equal('.awspublish-' + credentials.params.Bucket);
         expect(fs.accessSync(path.join(__dirname, '../.awspublish-' + credentials.params.Bucket), fs.F_OK)).to.be.undefined;
         done();
       });
@@ -435,7 +435,7 @@ describe('gulp-awspublish', function () {
 
           var deleted = arr.filter(function (file) {
             return file.s3 && file.s3.state === 'delete';
-          })
+          });
 
           // foo/1.txt should not be deleted because it was in the stream
           // foo/2.txt foo/3.txt should not be deleted because they match against the regex in the whitelist
@@ -458,7 +458,7 @@ describe('gulp-awspublish', function () {
 
           var deleted = arr.filter(function (file) {
             return file.s3 && file.s3.state === 'delete';
-          })
+          });
 
           // foo/1.txt should not be deleted because it was in the stream
           // foo/2.txt should not be deleted because it was in the whitelist
