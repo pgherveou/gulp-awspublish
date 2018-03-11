@@ -21,7 +21,7 @@
     "url": "git://github.com/pgherveou/gulp-awspublish.git"
   },
   "scripts": {
-    "lint": "jshint . --exclude-path .gitignore",
+    "lint": "eslint --fix .",
     "pretest": "npm run lint",
     "test": "istanbul test _mocha --report html -- test/*.js --reporter spec",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
@@ -45,11 +45,11 @@
     "chai": "*",
     "concurrent-transform": "^1.0.0",
     "coveralls": "*",
+    "eslint": "^4.18.2",
     "event-stream": "^3.2.1",
     "gulp": "^3.9.0",
     "gulp-rename": "*",
     "istanbul": "*",
-    "jshint": "^2.9.5",
     "mocha": "*",
     "mocha-lcov-reporter": "*"
   },
