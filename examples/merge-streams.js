@@ -7,12 +7,15 @@ var credentials = JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8'));
 var publisher = awspublish.create(credentials);
 
 // you can use a filter to source only files you want gzipped
-var gzipFilter = [ 'public/**/*.js', 'public/**/*.html', 'public/**/*.css' ];
+var gzipFilter = ['public/**/*.js', 'public/**/*.html', 'public/**/*.css'];
 
 // it's a good idea to create an inverse filter to avoid uploading duplicates
 // see https://github.com/wearefractal/vinyl-fs#srcglobs-opt for more details
-var plainFilter = [ 
-  'public/**/*', '!public/**/*.js', '!public/**/*.html', '!public/**/*.css'
+var plainFilter = [
+  'public/**/*',
+  '!public/**/*.js',
+  '!public/**/*.html',
+  '!public/**/*.css'
 ];
 
 var gzip = gulp.src(gzipFilter).pipe(awspublish.gzip());
