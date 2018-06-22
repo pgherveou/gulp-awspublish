@@ -66,7 +66,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('hello world 2')
+          contents: Buffer.from('hello world 2')
         })
       );
 
@@ -75,7 +75,7 @@ describe('gulp-awspublish', function() {
 
     it('should produce gzip file with S3 headers', function(done) {
       var gzip = awspublish.gzip({ ext: '.gz' });
-      var contents = new Buffer('hello world');
+      var contents = Buffer.from('hello world');
       var srcFile = new Vinyl({
         path: '/test/hello.txt',
         base: '/',
@@ -113,7 +113,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('hello world')
+          contents: Buffer.from('hello world')
         })
       );
 
@@ -147,7 +147,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('hello world')
+          contents: Buffer.from('hello world')
         })
       );
 
@@ -155,7 +155,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello2.txt',
           base: '/',
-          contents: new Buffer('hello world')
+          contents: Buffer.from('hello world')
         })
       );
 
@@ -194,7 +194,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello3.txt',
           base: '/',
-          contents: new Buffer('hello world')
+          contents: Buffer.from('hello world')
         })
       );
 
@@ -239,7 +239,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('hello world 2')
+          contents: Buffer.from('hello world 2')
         })
       );
 
@@ -266,7 +266,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('hello world 2')
+          contents: Buffer.from('hello world 2')
         })
       );
 
@@ -288,7 +288,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('hello world 2')
+          contents: Buffer.from('hello world 2')
         })
       );
 
@@ -342,7 +342,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('hello world 2')
+          contents: Buffer.from('hello world 2')
         })
       );
 
@@ -369,7 +369,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('hello world 2')
+          contents: Buffer.from('hello world 2')
         })
       );
 
@@ -391,7 +391,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('hello world 2')
+          contents: Buffer.from('hello world 2')
         })
       );
 
@@ -404,7 +404,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/simulate.txt',
           base: '/',
-          contents: new Buffer('simulate')
+          contents: Buffer.from('simulate')
         })
       );
 
@@ -446,7 +446,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.unknown',
           base: '/',
-          contents: new Buffer('hello world')
+          contents: Buffer.from('hello world')
         })
       );
 
@@ -475,7 +475,7 @@ describe('gulp-awspublish', function() {
           path: name + '.txt',
           headers: { 'Content-Type': 'text/plain; charset=utf-8' }
         },
-        contents: new Buffer('hello world')
+        contents: Buffer.from('hello world')
       };
 
       beforeEach(function(done) {
