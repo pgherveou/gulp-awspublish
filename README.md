@@ -147,7 +147,7 @@ Here are some example credential configurations:
 
 Hardcoded credentials (**Note**: We recommend you **not** hard-code credentials inside an application. Use this method only for small personal scripts or for testing purposes.):
 
-```
+```javascript
 var publisher = awspublish.create({
   region: 'your-region-id',
   params: {
@@ -160,7 +160,7 @@ var publisher = awspublish.create({
 
 Using a profile by name from `~/.aws/credentials`:
 
-```
+```javascript
 var AWS = require('aws-sdk');
 
 var publisher = awspublish.create({
