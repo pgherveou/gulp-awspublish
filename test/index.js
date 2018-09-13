@@ -137,6 +137,48 @@ describe('gulp-awspublish', function() {
       gzip.end();
     });
 
+    it('should consider size of gzip files with smaller', function(done) {
+      var gzip = awspublish.gzip({ ext: '.gz', smaller: true });
+      gzip.write(
+        new Vinyl({
+          path: '/test/hello.txt',
+          base: '/',
+          contents: new Buffer('') // zero-length file is always larger compressed
+        })
+      );
+      var hello2 = new Buffer('hello world'.repeat(10));
+      gzip.write(
+        new Vinyl({
+          path: '/test/hello2.txt',
+          base: '/',
+          contents: hello2
+        })
+      );
+
+      gzip.pipe(
+        es.writeArray(function(err, files) {
+          expect(err).not.to.exist;
+          expect(files).to.have.length(2);
+
+          expect(files[0].path).to.eq('/test/hello.txt');
+          expect(files[0].unzipPath).not.to.exist;
+          expect(files[0].s3.path).to.eq('test/hello.txt');
+          expect(files[0].s3.headers['Content-Encoding']).not.to.exist;
+          expect(files[0].contents.length).to.eq(0);
+
+          expect(files[1].path).to.eq('/test/hello2.txt.gz');
+          expect(files[1].unzipPath).to.eq('/test/hello2.txt');
+          expect(files[1].s3.path).to.eq('test/hello2.txt.gz');
+          expect(files[1].s3.headers['Content-Encoding']).to.eq('gzip');
+          expect(files[1].contents.length).to.be.lt(hello2.length);
+
+          done();
+        })
+      );
+
+      gzip.end();
+    });
+
     it('should create new file on s3 with headers', function(done) {
       var headers = {
         'Cache-Control': 'max-age=315360000, no-transform, public'
