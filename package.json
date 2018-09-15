@@ -1,6 +1,6 @@
 {
   "name": "gulp-awspublish",
-  "version": "3.3.3",
+  "version": "3.4.0",
   "description": "gulp plugin to publish files to amazon s3",
   "keywords": [
     "gulpplugin",
