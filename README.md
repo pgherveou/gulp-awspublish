@@ -1,6 +1,6 @@
 # gulp-awspublish
 
-[![NPM version][npm-image]][npm-url] [![Dependency Status][depstat-image]][depstat-url]
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 > awspublish plugin for [gulp](https://github.com/wearefractal/gulp)
 
@@ -351,3 +351,5 @@ https://www.npmjs.com/package/gulp-cloudfront-invalidate-aws-publish
 [npm-image]: https://badge.fury.io/js/gulp-awspublish.svg
 [depstat-url]: https://david-dm.org/pgherveou/gulp-awspublish
 [depstat-image]: https://david-dm.org/pgherveou/gulp-awspublish.svg
+[travis-url]: https://www.travis-ci.org/pgherveou/gulp-awspublish
+[travis-image]: https://www.travis-ci.org/pgherveou/gulp-awspublish.svg?branch=master
