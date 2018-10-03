@@ -27,17 +27,17 @@
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "dependencies": {
-    "ansi-colors": "^1.0.1",
+    "ansi-colors": "^3.1.0",
     "aws-sdk": "^2.1.16",
-    "clone": "^1.0.2",
+    "clone": "^2.1.2",
     "fancy-log": "^1.3.2",
     "mime-types": "^2.1.18",
     "pad-component": "^0.0.1",
     "pascal-case": "^2.0.0",
-    "plugin-error": "^0.1.2",
+    "plugin-error": "^1.0.1",
     "pumpify": "^1.3.5",
     "through2": "^2.0.3",
-    "vinyl": "^1.1.1",
+    "vinyl": "^2.2.0",
     "xml-nodes": "^0.1.5",
     "xml-objects": "^1.0.1"
   },
@@ -45,18 +45,17 @@
     "chai": "*",
     "concurrent-transform": "^1.0.0",
     "coveralls": "*",
-    "eslint": "^4.18.2",
-    "event-stream": "^3.2.1",
+    "eslint": "^5.6.0",
+    "event-stream": "^4.0.1",
     "gulp": "^3.9.0",
     "gulp-rename": "*",
     "istanbul": "*",
     "mocha": "*",
     "mocha-lcov-reporter": "*",
-    "prettier": "1.11.1"
+    "prettier": "^1.11.1"
   },
   "engines": {
-    "node": ">=0.12.0",
-    "npm": ">=1.2.10"
+    "node": ">=6 <7 || >=8 <9 || >=10"
   },
   "licenses": [
     {
