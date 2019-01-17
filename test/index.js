@@ -15,16 +15,18 @@ var fs = require('fs'),
 describe('gulp-awspublish', function() {
   this.timeout(10000);
 
-  var credentials = process.env.TRAVIS ? {
-      params: {
-        Bucket: process.env.bucket + '-' + process.env.TRAVIS_NODE_VERSION
-      },
-      credentials: {
-        accessKeyId: process.env.accessKeyId,
-        secretAccessKey: process.env.secretAccessKey,
-        signatureVersion: 'v3'
-      }
-    } : JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8')),
+  var credentials = process.env.TRAVIS
+      ? {
+          params: {
+            Bucket: process.env.bucket + '-' + process.env.TRAVIS_NODE_VERSION
+          },
+          credentials: {
+            accessKeyId: process.env.accessKeyId,
+            secretAccessKey: process.env.secretAccessKey,
+            signatureVersion: 'v3'
+          }
+        }
+      : JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8')),
     publisher = awspublish.create(credentials);
 
   // remove files
