@@ -64,40 +64,34 @@ gulp.task("publish", function() {
 // ...
 ```
 
-* Note: If you follow the [aws-sdk suggestions](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html) for
+- Note: If you follow the [aws-sdk suggestions](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html) for
   providing your credentials you don't need to pass them in to create the publisher.
 
-* Note: In order for publish to work on S3, your policy has to allow the following S3 actions:
+- Note: In order for publish to work on S3, your policy has to allow the following S3 actions:
 
-```
+```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket"
-            ],
-            "Resource": [
-                "arn:aws:s3:::BUCKETNAME"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:PutObjectAcl",
-                "s3:GetObject",
-                "s3:GetObjectAcl",
-                "s3:DeleteObject",
-                "s3:ListMultipartUploadParts",
-                "s3:AbortMultipartUpload"
-            ],
-            "Resource": [
-                "arn:aws:s3:::BUCKETNAME/*"
-            ]
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::BUCKETNAME"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+        "s3:GetObject",
+        "s3:GetObjectAcl",
+        "s3:DeleteObject",
+        "s3:ListMultipartUploadParts",
+        "s3:AbortMultipartUpload"
+      ],
+      "Resource": ["arn:aws:s3:::BUCKETNAME/*"]
+    }
+  ]
 }
 ```
 
@@ -128,13 +122,13 @@ gulp.task("publish", function() {
 
 create a through stream, that gzip file and add Content-Encoding header.
 
-* Note: Node version 0.12.x or later is required in order to use `awspublish.gzip`. If you need an older node engine to work with gzipping, you can use [v2.0.2](https://github.com/pgherveou/gulp-awspublish/tree/v2.0.2).
+- Note: Node version 0.12.x or later is required in order to use `awspublish.gzip`. If you need an older node engine to work with gzipping, you can use [v2.0.2](https://github.com/pgherveou/gulp-awspublish/tree/v2.0.2).
 
 Available options:
 
-* ext: file extension to add to gzipped file (eg: { ext: '.gz' })
-* smaller: gzip files only when result is smaller
-* Any options that can be passed to [zlib.gzip](https://nodejs.org/api/zlib.html#zlib_options)
+- ext: file extension to add to gzipped file (eg: { ext: '.gz' })
+- smaller: gzip files only when result is smaller
+- Any options that can be passed to [zlib.gzip](https://nodejs.org/api/zlib.html#zlib_options)
 
 ### awspublish.create(AWSConfig, cacheOptions)
 
@@ -187,23 +181,23 @@ Instead of putting anything in the configuration object, you can also provide th
 
 Create a through stream, that push files to s3.
 
-* header: hash of headers to add or override to existing s3 headers.
-* options: optional additional publishing options
-  * force: bypass cache / skip
-  * noAcl: do not set x-amz-acl by default
-  * simulate: debugging option to simulate s3 upload
-  * createOnly: skip file updates
+- header: hash of headers to add or override to existing s3 headers.
+- options: optional additional publishing options
+  - force: bypass cache / skip
+  - noAcl: do not set x-amz-acl by default
+  - simulate: debugging option to simulate s3 upload
+  - createOnly: skip file updates
 
 Files that go through the stream receive extra properties:
 
-* s3.path: s3 path
-* s3.etag: file etag
-* s3.date: file last modified date
-* s3.state: publication state (create, update, delete, cache or skip)
-* s3.headers: s3 headers for this file. Defaults headers are:
-  * x-amz-acl: public-read
-  * Content-Type
-  * Content-Length
+- s3.path: s3 path
+- s3.etag: file etag
+- s3.date: file last modified date
+- s3.state: publication state (create, update, delete, cache or skip)
+- s3.headers: s3 headers for this file. Defaults headers are:
+  - x-amz-acl: public-read
+  - Content-Type
+  - Content-Length
 
 > Note: `publish` will never delete files remotely. To clean up unused remote files use `sync`.
 
@@ -218,8 +212,8 @@ Cache file is save in the current working dir and is named `.awspublish-<bucket>
 
 create a transform stream that delete old files from the bucket.
 
-* prefix: prefix to sync a specific directory
-* whitelistedFiles: array that can contain regular expressions or strings that match against filenames that
+- prefix: prefix to sync a specific directory
+- whitelistedFiles: array that can contain regular expressions or strings that match against filenames that
   should never be deleted from the bucket.
 
 e.g.
@@ -261,7 +255,7 @@ Create a reporter that logs s3.path and s3.state (delete, create, update, cache,
 
 Available options:
 
-* states: list of state to log (default to all)
+- states: list of state to log (default to all)
 
 ```js
 // this will publish,sync bucket files and print created, updated and deleted files
