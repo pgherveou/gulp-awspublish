@@ -95,6 +95,16 @@ gulp.task("publish", function() {
 }
 ```
 
+### Bucket permissions
+
+If you are receiving "Access Denied" message, verify that public access to the bucket is **not blocked**. The following permissions are known to be working:
+
+- Block all public access: **Off**
+  - Block public access to buckets and objects granted through new access control lists (ACLs): Off
+  - Block public access to buckets and objects granted through any access control lists (ACLs): Off
+  - Block public access to buckets and objects granted through new public bucket policies: Off
+  - Block public and cross-account access to buckets and objects through any public bucket policies: Off
+
 ## Testing
 
 1.  Create an S3 bucket which will be used for the tests. Optionally create an IAM user for running the tests.
