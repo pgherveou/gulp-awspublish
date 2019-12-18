@@ -35,11 +35,8 @@
     "pad-component": "^0.0.1",
     "pascal-case": "^2.0.0",
     "plugin-error": "^1.0.1",
-    "pumpify": "^2.0.1",
     "through2": "^3.0.1",
-    "vinyl": "^2.2.0",
-    "xml-nodes": "^0.1.5",
-    "xml-objects": "^1.0.1"
+    "vinyl": "^2.2.0"
   },
   "devDependencies": {
     "chai": "*",
