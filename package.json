@@ -37,7 +37,7 @@
     "pad-component": "^0.0.1",
     "pascal-case": "^2.0.0",
     "plugin-error": "^1.0.1",
-    "s3-streams": "^0.4.0",
+    "readable-stream": "^3.4.0",
     "through2": "^3.0.1",
     "vinyl": "^2.2.0"
   },
