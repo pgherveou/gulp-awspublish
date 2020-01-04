@@ -97,13 +97,20 @@ gulp.task("publish", function() {
 
 ### Bucket permissions
 
-If you are receiving "Access Denied" message, verify that public access to the bucket is **not blocked**. The following permissions are known to be working:
+By default, the plugin works only when public access to the bucket is **not blocked**:
 
 - Block all public access: **Off**
   - Block public access to buckets and objects granted through new access control lists (ACLs): Off
   - Block public access to buckets and objects granted through any access control lists (ACLs): Off
   - Block public access to buckets and objects granted through new public bucket policies: Off
   - Block public and cross-account access to buckets and objects through any public bucket policies: Off
+
+When dealing with a private bucket, make sure to pass the option `{ noAcl: true }` or a value for the `x-amz-acl` header:
+
+```js
+publisher.publish({}, { noAcl: true });
+publisher.publish({ "x-amz-acl": "something" });
+```
 
 ## Testing
 
