@@ -5,3 +5,5 @@ coverage
 aws-credentials.json
 .awspublish-*
 bad-aws-credentials.json
+.history/
+.idea/

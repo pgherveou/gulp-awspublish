@@ -46,7 +46,7 @@ describe('gulp-awspublish', function() {
       'test/hello.txtgz'
     ]);
 
-    publisher.client.deleteObjects(deleteParams, done);
+    publisher.client.deleteObjects(deleteParams[0], done);
   });
 
   after(function() {
@@ -154,10 +154,10 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: new Buffer('') // zero-length file is always larger compressed
+          contents: Buffer.from('') // zero-length file is always larger compressed
         })
       );
-      var hello2 = new Buffer('hello world'.repeat(10));
+      var hello2 = Buffer.from('hello world'.repeat(10));
       gzip.write(
         new Vinyl({
           path: '/test/hello2.txt',
@@ -518,7 +518,7 @@ describe('gulp-awspublish', function() {
         'test/hello.txt.gz',
         'test/hello.unknown'
       ]);
-      publisher.client.deleteObjects(deleteParams, done);
+      publisher.client.deleteObjects(deleteParams[0], done);
     });
 
     // add some dummy file
@@ -606,6 +606,11 @@ describe('gulp-awspublish', function() {
 
       stream.write({ s3: { path: 'foo/1.txt' } });
       stream.end();
+    });
+    it('chunks file deletion requests into 1K chunks', function() {
+      var res = awspublish._buildDeleteMultiple(new Array(1001).fill('test'));
+      expect(res.length).to.eq(2);
+      expect(res[1].Delete.Objects.length).to.eq(1);
     });
   });
 });
