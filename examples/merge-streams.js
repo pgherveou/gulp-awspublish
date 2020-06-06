@@ -15,7 +15,7 @@ var plainFilter = [
   'public/**/*',
   '!public/**/*.js',
   '!public/**/*.html',
-  '!public/**/*.css'
+  '!public/**/*.css',
 ];
 
 var gzip = gulp.src(gzipFilter).pipe(awspublish.gzip());

@@ -21,7 +21,7 @@ var publisher = awspublish.create(credentials);
 gulp
   .src('public/assets/**', { cwd: 'examples' })
   .pipe(
-    rename(function(path) {
+    rename(function (path) {
       path.dirname = 'public/assets/' + path.dirname;
     })
   )
