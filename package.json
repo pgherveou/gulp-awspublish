@@ -48,7 +48,7 @@
     "gulp": "^4.0.0",
     "gulp-rename": "*",
     "istanbul": "*",
-    "mocha": "*",
+    "mocha": "^6.2.2",
     "mocha-lcov-reporter": "*",
     "prettier": "^1.15.3"
   },
