@@ -12,25 +12,25 @@ var fs = require('fs'),
   awspublish = require('../'),
   expect = chai.expect;
 
-describe('gulp-awspublish', function() {
+describe('gulp-awspublish', function () {
   this.timeout(10000);
 
   var credentials = process.env.TRAVIS
       ? {
           params: {
-            Bucket: process.env.bucket + '-' + process.env.TRAVIS_NODE_VERSION
+            Bucket: process.env.bucket + '-' + process.env.TRAVIS_NODE_VERSION,
           },
           credentials: {
             accessKeyId: process.env.accessKeyId,
             secretAccessKey: process.env.secretAccessKey,
-            signatureVersion: 'v3'
-          }
+            signatureVersion: 'v3',
+          },
         }
       : JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8')),
     publisher = awspublish.create(credentials);
 
   // remove files
-  before(function(done) {
+  before(function (done) {
     try {
       fs.unlinkSync(path.join(__dirname, publisher.getCacheFilename()));
     } catch (err) {}
@@ -43,13 +43,13 @@ describe('gulp-awspublish', function() {
       'test/hello.txt',
       'test/hello2.txt',
       'test/hello3.txt',
-      'test/hello.txtgz'
+      'test/hello.txtgz',
     ]);
 
     publisher.client.deleteObjects(deleteParams[0], done);
   });
 
-  after(function() {
+  after(function () {
     try {
       fs.unlinkSync(path.join(__dirname, publisher.getCacheFilename()));
     } catch (err) {}
@@ -58,8 +58,8 @@ describe('gulp-awspublish', function() {
     } catch (err) {}
   });
 
-  describe('Publish', function() {
-    it('should emit error when using invalid bucket', function(done) {
+  describe('Publish', function () {
+    it('should emit error when using invalid bucket', function (done) {
       var badCredentials, badPublisher, stream;
 
       badCredentials = clone(credentials);
@@ -67,7 +67,7 @@ describe('gulp-awspublish', function() {
       (badPublisher = awspublish.create(badCredentials)),
         (stream = badPublisher.publish());
 
-      stream.on('error', function(err) {
+      stream.on('error', function (err) {
         expect(err).to.be.ok;
         expect(err.statusCode).to.eq(403);
         done();
@@ -77,25 +77,25 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('hello world 2')
+          contents: Buffer.from('hello world 2'),
         })
       );
 
       stream.end();
     });
 
-    it('should produce gzip file with S3 headers', function(done) {
+    it('should produce gzip file with S3 headers', function (done) {
       var gzip = awspublish.gzip({ ext: '.gz' });
       var contents = Buffer.from('hello world');
       var srcFile = new Vinyl({
         path: '/test/hello.txt',
         base: '/',
-        contents: contents
+        contents: contents,
       });
 
       gzip.write(srcFile);
       gzip.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].path).to.eq('/test/hello.txt.gz');
@@ -104,7 +104,7 @@ describe('gulp-awspublish', function() {
           expect(files[0].s3.headers['Content-Encoding']).to.eq('gzip');
 
           // compare uncompressed to srcFile
-          zlib.unzip(files[0].contents, function(err, buf) {
+          zlib.unzip(files[0].contents, function (err, buf) {
             var newFileContent = buf.toString('utf8', 0, buf.length),
               srcFileContent = contents.toString('utf8', 0, contents.length);
             expect(newFileContent).to.eq(srcFileContent);
@@ -116,7 +116,7 @@ describe('gulp-awspublish', function() {
       gzip.end();
     });
 
-    it('should upload gzip file', function(done) {
+    it('should upload gzip file', function (done) {
       var gzip = awspublish.gzip({ ext: '.gz' }),
         stream = gzip.pipe(publisher.publish());
 
@@ -124,18 +124,18 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('hello world')
+          contents: Buffer.from('hello world'),
         })
       );
 
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.headers['Content-Type']).to.eq(
             'text/plain; charset=utf-8'
           );
-          publisher.client.headObject({ Key: 'test/hello.txt.gz' }, function(
+          publisher.client.headObject({ Key: 'test/hello.txt.gz' }, function (
             err,
             res
           ) {
@@ -148,13 +148,13 @@ describe('gulp-awspublish', function() {
       gzip.end();
     });
 
-    it('should consider size of gzip files with smaller', function(done) {
+    it('should consider size of gzip files with smaller', function (done) {
       var gzip = awspublish.gzip({ ext: '.gz', smaller: true });
       gzip.write(
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('') // zero-length file is always larger compressed
+          contents: Buffer.from(''), // zero-length file is always larger compressed
         })
       );
       var hello2 = Buffer.from('hello world'.repeat(10));
@@ -162,12 +162,12 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello2.txt',
           base: '/',
-          contents: hello2
+          contents: hello2,
         })
       );
 
       gzip.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(2);
 
@@ -190,9 +190,9 @@ describe('gulp-awspublish', function() {
       gzip.end();
     });
 
-    it('should create new file on s3 with headers', function(done) {
+    it('should create new file on s3 with headers', function (done) {
       var headers = {
-        'Cache-Control': 'max-age=315360000, no-transform, public'
+        'Cache-Control': 'max-age=315360000, no-transform, public',
       };
 
       var stream = publisher.publish(headers);
@@ -200,7 +200,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('hello world')
+          contents: Buffer.from('hello world'),
         })
       );
 
@@ -208,12 +208,12 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello2.txt',
           base: '/',
-          contents: Buffer.from('hello world')
+          contents: Buffer.from('hello world'),
         })
       );
 
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(2);
           expect(files[0].s3.path).to.eq('test/hello.txt');
@@ -228,7 +228,7 @@ describe('gulp-awspublish', function() {
           expect(files[0].s3.headers['Content-Length']).to.eq(
             files[0].contents.length
           );
-          publisher.client.headObject({ Key: 'test/hello.txt' }, function(
+          publisher.client.headObject({ Key: 'test/hello.txt' }, function (
             err,
             res
           ) {
@@ -241,18 +241,18 @@ describe('gulp-awspublish', function() {
       stream.end();
     });
 
-    it('should not send s3 header x-amz-acl if option {noAcl: true}', function(done) {
+    it('should not send s3 header x-amz-acl if option {noAcl: true}', function (done) {
       var stream = publisher.publish({}, { noAcl: true });
       stream.write(
         new Vinyl({
           path: '/test/hello3.txt',
           base: '/',
-          contents: Buffer.from('hello world')
+          contents: Buffer.from('hello world'),
         })
       );
 
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.path).to.eq('test/hello3.txt');
@@ -264,7 +264,7 @@ describe('gulp-awspublish', function() {
           expect(files[0].s3.headers['Content-Length']).to.eq(
             files[0].contents.length
           );
-          publisher.client.headObject({ Key: 'test/hello.txt' }, function(
+          publisher.client.headObject({ Key: 'test/hello.txt' }, function (
             err,
             res
           ) {
@@ -277,10 +277,10 @@ describe('gulp-awspublish', function() {
       stream.end();
     });
 
-    it('should update existing file on s3', function(done) {
+    it('should update existing file on s3', function (done) {
       var stream = publisher.publish();
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('update');
@@ -292,22 +292,22 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('hello world 2')
+          contents: Buffer.from('hello world 2'),
         })
       );
 
       stream.end();
     });
 
-    it('can skip updating an existing file on s3 (createOnly)', function(done) {
+    it('can skip updating an existing file on s3 (createOnly)', function (done) {
       var stream = publisher.publish(
         {},
         {
-          createOnly: true
+          createOnly: true,
         }
       );
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('skip');
@@ -319,17 +319,17 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('hello world 2')
+          contents: Buffer.from('hello world 2'),
         })
       );
 
       stream.end();
     });
 
-    it('should skip file update', function(done) {
+    it('should skip file update', function (done) {
       var stream = publisher.publish();
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('skip');
@@ -341,19 +341,19 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('hello world 2')
+          contents: Buffer.from('hello world 2'),
         })
       );
 
       stream.end();
     });
 
-    it('should have a the correct default cachefile name', function(done) {
+    it('should have a the correct default cachefile name', function (done) {
       var publisherWithDefaultCache = awspublish.create(credentials),
         stream = publisherWithDefaultCache.publish(),
         cache = stream.pipe(publisherWithDefaultCache.cache());
 
-      cache.on('finish', function() {
+      cache.on('finish', function () {
         expect(publisherWithDefaultCache._cacheFile).to.equal(
           '.awspublish-' + credentials.params.Bucket
         );
@@ -369,14 +369,14 @@ describe('gulp-awspublish', function() {
       stream.end();
     });
 
-    it('should be able to use custom cachefile names', function(done) {
+    it('should be able to use custom cachefile names', function (done) {
       var publisherWithCustomCache = awspublish.create(credentials, {
-          cacheFileName: 'testCacheFile'
+          cacheFileName: 'testCacheFile',
         }),
         stream = publisherWithCustomCache.publish(),
         cache = stream.pipe(publisherWithCustomCache.cache());
 
-      cache.on('finish', function() {
+      cache.on('finish', function () {
         expect(publisherWithCustomCache._cacheFile).to.equal('testCacheFile');
         expect(
           fs.accessSync(path.join(__dirname, '../testCacheFile'), fs.F_OK)
@@ -387,7 +387,7 @@ describe('gulp-awspublish', function() {
       stream.end();
     });
 
-    it('should be able to use the cache', function(done) {
+    it('should be able to use the cache', function (done) {
       var stream = publisher.publish(),
         cache = stream.pipe(publisher.cache());
 
@@ -395,11 +395,11 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('hello world 2')
+          contents: Buffer.from('hello world 2'),
         })
       );
 
-      cache.on('finish', function() {
+      cache.on('finish', function () {
         expect(publisher._cache).to.have.ownProperty('test/hello.txt');
         done();
       });
@@ -407,10 +407,10 @@ describe('gulp-awspublish', function() {
       stream.end();
     });
 
-    it('should mark file as cached', function(done) {
+    it('should mark file as cached', function (done) {
       var stream = publisher.publish();
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('cache');
@@ -422,17 +422,17 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('hello world 2')
+          contents: Buffer.from('hello world 2'),
         })
       );
 
       stream.end();
     });
 
-    it('should force upload', function(done) {
+    it('should force upload', function (done) {
       var stream = publisher.publish({}, { force: true });
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('update');
@@ -444,29 +444,29 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.txt',
           base: '/',
-          contents: Buffer.from('hello world 2')
+          contents: Buffer.from('hello world 2'),
         })
       );
 
       stream.end();
     });
 
-    it('should simulate file upload on s3', function(done) {
+    it('should simulate file upload on s3', function (done) {
       var stream = publisher.publish(null, { simulate: true });
       stream.write(
         new Vinyl({
           path: '/test/simulate.txt',
           base: '/',
-          contents: Buffer.from('simulate')
+          contents: Buffer.from('simulate'),
         })
       );
 
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.path).to.eq('test/simulate.txt');
-          publisher.client.headObject({ Key: '/test/simulate.txt' }, function(
+          publisher.client.headObject({ Key: '/test/simulate.txt' }, function (
             err
           ) {
             expect(err.statusCode).to.eq(404);
@@ -478,10 +478,10 @@ describe('gulp-awspublish', function() {
       stream.end();
     });
 
-    it('should publish files with unknown extension', function(done) {
+    it('should publish files with unknown extension', function (done) {
       var stream = publisher.publish();
       stream.pipe(
-        es.writeArray(function(err, files) {
+        es.writeArray(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.path).to.eq('test/hello.unknown');
@@ -499,7 +499,7 @@ describe('gulp-awspublish', function() {
         new Vinyl({
           path: '/test/hello.unknown',
           base: '/',
-          contents: Buffer.from('hello world')
+          contents: Buffer.from('hello world'),
         })
       );
 
@@ -507,47 +507,47 @@ describe('gulp-awspublish', function() {
     });
   });
 
-  describe('Sync', function() {
+  describe('Sync', function () {
     // remove files
-    before(function(done) {
+    before(function (done) {
       var deleteParams = awspublish._buildDeleteMultiple([
         'test/hello.txt',
         'test/hello2.txt',
         'test/hello3.txt',
         'test/hello.txtgz',
         'test/hello.txt.gz',
-        'test/hello.unknown'
+        'test/hello.unknown',
       ]);
       publisher.client.deleteObjects(deleteParams[0], done);
     });
 
     // add some dummy file
-    ['bar', 'foo/1', 'foo/2', 'foo/3'].forEach(function(name) {
+    ['bar', 'foo/1', 'foo/2', 'foo/3'].forEach(function (name) {
       var file = {
         s3: {
           path: name + '.txt',
-          headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' },
         },
-        contents: Buffer.from('hello world')
+        contents: Buffer.from('hello world'),
       };
 
-      beforeEach(function(done) {
+      beforeEach(function (done) {
         var params = awspublish._toAwsParams(file);
         publisher.client.putObject(params, done);
       });
     });
 
-    it('should sync bucket with published data', function(done) {
+    it('should sync bucket with published data', function (done) {
       var stream = through.obj();
 
       stream.pipe(publisher.sync('foo')).pipe(
-        es.writeArray(function(err, arr) {
+        es.writeArray(function (err, arr) {
           expect(err).to.not.exist;
           var deleted = arr
-            .filter(function(file) {
+            .filter(function (file) {
               return file.s3 && file.s3.state === 'delete';
             })
-            .map(function(file) {
+            .map(function (file) {
               return file.s3.path;
             })
             .sort()
@@ -562,14 +562,14 @@ describe('gulp-awspublish', function() {
       stream.end();
     });
 
-    it('should not delete files that match a whitelist regex', function(done) {
+    it('should not delete files that match a whitelist regex', function (done) {
       var stream = through.obj();
 
       stream.pipe(publisher.sync('', [/foo/])).pipe(
-        es.writeArray(function(err, arr) {
+        es.writeArray(function (err, arr) {
           expect(err).to.not.exist;
 
-          var deleted = arr.filter(function(file) {
+          var deleted = arr.filter(function (file) {
             return file.s3 && file.s3.state === 'delete';
           });
 
@@ -585,14 +585,14 @@ describe('gulp-awspublish', function() {
       stream.end();
     });
 
-    it('should not delete files that match a whitelist string', function(done) {
+    it('should not delete files that match a whitelist string', function (done) {
       var stream = through.obj();
 
       stream.pipe(publisher.sync('', ['foo/2.txt', 'fooo/3.txt'])).pipe(
-        es.writeArray(function(err, arr) {
+        es.writeArray(function (err, arr) {
           expect(err).to.not.exist;
 
-          var deleted = arr.filter(function(file) {
+          var deleted = arr.filter(function (file) {
             return file.s3 && file.s3.state === 'delete';
           });
 
@@ -607,7 +607,7 @@ describe('gulp-awspublish', function() {
       stream.write({ s3: { path: 'foo/1.txt' } });
       stream.end();
     });
-    it('chunks file deletion requests into 1K chunks', function() {
+    it('chunks file deletion requests into 1K chunks', function () {
       var res = awspublish._buildDeleteMultiple(new Array(1001).fill('test'));
       expect(res.length).to.eq(2);
       expect(res[1].Delete.Objects.length).to.eq(1);

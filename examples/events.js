@@ -10,10 +10,10 @@ gulp
   .pipe(publisher.publish())
   .pipe(awspublish.reporter())
 
-  .on('end', function() {
+  .on('end', function () {
     console.log('end...');
   })
 
-  .on('finish', function() {
+  .on('finish', function () {
     console.log('finish...');
   });
