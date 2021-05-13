@@ -135,13 +135,13 @@ describe('gulp-awspublish', function () {
           expect(files[0].s3.headers['Content-Type']).to.eq(
             'text/plain; charset=utf-8'
           );
-          publisher.client.headObject({ Key: 'test/hello.txt.gz' }, function (
-            err,
-            res
-          ) {
-            expect(res.ETag).to.exist;
-            done(err);
-          });
+          publisher.client.headObject(
+            { Key: 'test/hello.txt.gz' },
+            function (err, res) {
+              expect(res.ETag).to.exist;
+              done(err);
+            }
+          );
         })
       );
 
@@ -228,13 +228,13 @@ describe('gulp-awspublish', function () {
           expect(files[0].s3.headers['Content-Length']).to.eq(
             files[0].contents.length
           );
-          publisher.client.headObject({ Key: 'test/hello.txt' }, function (
-            err,
-            res
-          ) {
-            expect(res.ETag).to.exist;
-            done(err);
-          });
+          publisher.client.headObject(
+            { Key: 'test/hello.txt' },
+            function (err, res) {
+              expect(res.ETag).to.exist;
+              done(err);
+            }
+          );
         })
       );
 
@@ -264,13 +264,13 @@ describe('gulp-awspublish', function () {
           expect(files[0].s3.headers['Content-Length']).to.eq(
             files[0].contents.length
           );
-          publisher.client.headObject({ Key: 'test/hello.txt' }, function (
-            err,
-            res
-          ) {
-            expect(res.ETag).to.exist;
-            done(err);
-          });
+          publisher.client.headObject(
+            { Key: 'test/hello.txt' },
+            function (err, res) {
+              expect(res.ETag).to.exist;
+              done(err);
+            }
+          );
         })
       );
 
@@ -466,12 +466,13 @@ describe('gulp-awspublish', function () {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.path).to.eq('test/simulate.txt');
-          publisher.client.headObject({ Key: '/test/simulate.txt' }, function (
-            err
-          ) {
-            expect(err.statusCode).to.eq(404);
-            done();
-          });
+          publisher.client.headObject(
+            { Key: '/test/simulate.txt' },
+            function (err) {
+              expect(err.statusCode).to.eq(404);
+              done();
+            }
+          );
         })
       );
 
