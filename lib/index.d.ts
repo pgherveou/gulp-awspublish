@@ -35,8 +35,9 @@ interface Headers {
 declare class Publisher {
     constructor(awsConfig: AWSConfig, cacheOptions?: CacheOptions);
     public publish(headers?: Headers, options?: PublishOptions): Transform;
-    public reporter(options?: LogReporterOptions): Transform;
     public cache(): Transform;
 }
+
+export function reporter(options?: LogReporterOptions): Transform;
 
 export function create(awsConfig: AWSConfig, cacheOptions?: CacheOptions): Publisher
