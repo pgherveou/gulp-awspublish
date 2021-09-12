@@ -1,6 +1,6 @@
 {
-  "name": "gulp-awspublish",
-  "version": "4.1.2",
+  "name": "@pascencio/gulp-awspublish",
+  "version": "4.3.3",
   "description": "gulp plugin to publish files to amazon s3",
   "keywords": [
     "gulpplugin",
@@ -8,17 +8,18 @@
     "s3",
     "publish"
   ],
-  "homepage": "https://github.com/pgherveou/gulp-awspublish",
-  "bugs": "https://github.com/pgherveou/gulp-awspublish/issues",
+  "homepage": "https://github.com/pascencio/gulp-awspublish",
+  "bugs": "https://github.com/pascencio/gulp-awspublish/issues",
   "author": {
     "name": "PG Herveou",
     "email": "pg@jogabo.com",
-    "url": "https://github.com/pgherveou"
+    "url": "https://github.com/pascencio"
   },
   "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/pgherveou/gulp-awspublish.git"
+    "url": "git://github.com/pascencio/gulp-awspublish.git"
   },
   "scripts": {
     "lint": "prettier --single-quote --write **/*.js && eslint --fix .",
