@@ -173,8 +173,10 @@ var publisher = awspublish.create({
   params: {
     Bucket: "..."
   },
-  accessKeyId: "akid",
-  secretAccessKey: "secret"
+  credentials: {
+    accessKeyId: "akid",
+    secretAccessKey: "secret"
+  }
 });
 ```
 
