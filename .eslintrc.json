@@ -1,9 +1,13 @@
 {
   "env": {
-    "node": true,
-    "es6": true
+    "es6": true,
+    "mocha": true,
+    "node": true
   },
   "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 2021
+  },
   "rules": {
     "no-console": "off",
     "no-empty": ["error", { "allowEmptyCatch": true }]
