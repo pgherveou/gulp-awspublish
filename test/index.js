@@ -31,10 +31,10 @@ describe('gulp-awspublish', function () {
   // remove files
   before(function (done) {
     try {
-      fs.unlinkSync(path.join(__dirname, publisher.getCacheFilename()));
+      fs.unlinkSync(path.join(__dirname, '..', publisher.getCacheFilename()));
     } catch (err) {}
     try {
-      fs.unlinkSync(path.join(__dirname, '../testCacheFile'));
+      fs.unlinkSync(path.join(__dirname, '..', 'testCacheFile'));
     } catch (err) {}
     publisher._cache = {};
 
@@ -50,10 +50,10 @@ describe('gulp-awspublish', function () {
 
   after(function () {
     try {
-      fs.unlinkSync(path.join(__dirname, publisher.getCacheFilename()));
+      fs.unlinkSync(path.join(__dirname, '..', publisher.getCacheFilename()));
     } catch (err) {}
     try {
-      fs.unlinkSync(path.join(__dirname, '../testCacheFile'));
+      fs.unlinkSync(path.join(__dirname, '..', 'testCacheFile'));
     } catch (err) {}
   });
 
@@ -358,7 +358,11 @@ describe('gulp-awspublish', function () {
         );
         expect(
           fs.accessSync(
-            path.join(__dirname, '../.awspublish-' + credentials.params.Bucket),
+            path.join(
+              __dirname,
+              '..',
+              '.awspublish-' + credentials.params.Bucket
+            ),
             fs.F_OK
           )
         ).to.be.undefined;
@@ -378,7 +382,7 @@ describe('gulp-awspublish', function () {
       cache.on('finish', function () {
         expect(publisherWithCustomCache._cacheFile).to.equal('testCacheFile');
         expect(
-          fs.accessSync(path.join(__dirname, '../testCacheFile'), fs.F_OK)
+          fs.accessSync(path.join(__dirname, '..', 'testCacheFile'), fs.F_OK)
         ).to.be.undefined;
         done();
       });
