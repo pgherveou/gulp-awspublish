@@ -1,4 +1,3 @@
-/* global describe, before, it, after, beforeEach */
 'use strict';
 
 var fs = require('fs'),
