@@ -38,12 +38,15 @@ describe('gulp-awspublish', function () {
     } catch (err) {}
     publisher._cache = {};
 
-    var deleteParams = awspublish._buildDeleteMultiple([
-      'test/hello.txt',
-      'test/hello2.txt',
-      'test/hello3.txt',
-      'test/hello.txtgz',
-    ]);
+    var deleteParams = awspublish._buildDeleteMultiple(
+      publisher.client.config.params.Bucket,
+      [
+        'test/hello.txt',
+        'test/hello2.txt',
+        'test/hello3.txt',
+        'test/hello.txtgz',
+      ]
+    );
 
     publisher.client.deleteObjects(deleteParams[0], done);
   });
@@ -68,7 +71,7 @@ describe('gulp-awspublish', function () {
 
       stream.on('error', function (err) {
         expect(err).to.be.ok;
-        expect(err.statusCode).to.eq(403);
+        expect(err.$response.statusCode).to.eq(403);
         done();
       });
 
@@ -135,7 +138,10 @@ describe('gulp-awspublish', function () {
             'text/plain; charset=utf-8'
           );
           publisher.client.headObject(
-            { Key: 'test/hello.txt.gz' },
+            {
+              Bucket: publisher.client.config.params.Bucket,
+              Key: 'test/hello.txt.gz',
+            },
             function (err, res) {
               expect(res.ETag).to.exist;
               done(err);
@@ -228,7 +234,10 @@ describe('gulp-awspublish', function () {
             files[0].contents.length
           );
           publisher.client.headObject(
-            { Key: 'test/hello.txt' },
+            {
+              Bucket: publisher.client.config.params.Bucket,
+              Key: 'test/hello.txt',
+            },
             function (err, res) {
               expect(res.ETag).to.exist;
               done(err);
@@ -264,7 +273,10 @@ describe('gulp-awspublish', function () {
             files[0].contents.length
           );
           publisher.client.headObject(
-            { Key: 'test/hello.txt' },
+            {
+              Bucket: publisher.client.config.params.Bucket,
+              Key: 'test/hello.txt',
+            },
             function (err, res) {
               expect(res.ETag).to.exist;
               done(err);
@@ -470,9 +482,12 @@ describe('gulp-awspublish', function () {
           expect(files).to.have.length(1);
           expect(files[0].s3.path).to.eq('test/simulate.txt');
           publisher.client.headObject(
-            { Key: '/test/simulate.txt' },
+            {
+              Bucket: publisher.client.config.params.Bucket,
+              Key: '/test/simulate.txt',
+            },
             function (err) {
-              expect(err.statusCode).to.eq(404);
+              expect(err.$response.statusCode).to.eq(404);
               done();
             }
           );
@@ -514,14 +529,17 @@ describe('gulp-awspublish', function () {
   describe('Sync', function () {
     // remove files
     before(function (done) {
-      var deleteParams = awspublish._buildDeleteMultiple([
-        'test/hello.txt',
-        'test/hello2.txt',
-        'test/hello3.txt',
-        'test/hello.txtgz',
-        'test/hello.txt.gz',
-        'test/hello.unknown',
-      ]);
+      var deleteParams = awspublish._buildDeleteMultiple(
+        publisher.client.config.params.Bucket,
+        [
+          'test/hello.txt',
+          'test/hello2.txt',
+          'test/hello3.txt',
+          'test/hello.txtgz',
+          'test/hello.txt.gz',
+          'test/hello.unknown',
+        ]
+      );
       publisher.client.deleteObjects(deleteParams[0], done);
     });
 
@@ -536,7 +554,10 @@ describe('gulp-awspublish', function () {
       };
 
       beforeEach(function (done) {
-        var params = awspublish._toAwsParams(file);
+        var params = awspublish._toAwsParams(
+          publisher.client.config.params.Bucket,
+          file
+        );
         publisher.client.putObject(params, done);
       });
     });
@@ -612,7 +633,10 @@ describe('gulp-awspublish', function () {
       stream.end();
     });
     it('chunks file deletion requests into 1K chunks', function () {
-      var res = awspublish._buildDeleteMultiple(new Array(1001).fill('test'));
+      var res = awspublish._buildDeleteMultiple(
+        publisher.client.config.params.Bucket,
+        new Array(1001).fill('test')
+      );
       expect(res.length).to.eq(2);
       expect(res[1].Delete.Objects.length).to.eq(1);
     });
