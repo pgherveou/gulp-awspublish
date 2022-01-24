@@ -7,14 +7,17 @@ var fs = require('fs'),
   es = require('event-stream'),
   Vinyl = require('vinyl'),
   through = require('through2'),
-  clone = require('clone'),
   awspublish = require('../'),
   expect = chai.expect;
 
 describe('gulp-awspublish', function () {
   this.timeout(10000);
 
-  var credentials = process.env.TRAVIS
+  var credentials = getCredentials(),
+    publisher = awspublish.create(credentials);
+
+  function getCredentials() {
+    return process.env.TRAVIS
       ? {
           params: {
             Bucket: process.env.bucket + '-' + process.env.TRAVIS_NODE_VERSION,
@@ -25,8 +28,8 @@ describe('gulp-awspublish', function () {
             signatureVersion: 'v3',
           },
         }
-      : JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8')),
-    publisher = awspublish.create(credentials);
+      : JSON.parse(fs.readFileSync('aws-credentials.json', 'utf8'));
+  }
 
   // remove files
   before(function (done) {
@@ -64,7 +67,7 @@ describe('gulp-awspublish', function () {
     it('should emit error when using invalid bucket', function (done) {
       var badCredentials, badPublisher, stream;
 
-      badCredentials = clone(credentials);
+      badCredentials = getCredentials(credentials);
       badCredentials.params.Bucket = 'fake-bucket';
       (badPublisher = awspublish.create(badCredentials)),
         (stream = badPublisher.publish());
