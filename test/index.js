@@ -1,13 +1,12 @@
 'use strict';
 
-const { Writable } = require('stream');
+const { Transform, Writable } = require('stream');
 
 var fs = require('fs'),
   path = require('path'),
   zlib = require('zlib'),
   chai = require('chai'),
   Vinyl = require('vinyl'),
-  through = require('through2'),
   awspublish = require('../'),
   expect = chai.expect;
 
@@ -31,6 +30,13 @@ function collectFiles(callback) {
   };
 
   return writable;
+}
+
+// Inspired by obj() of through2 package
+function createTransform() {
+  const stream = new Transform({ objectMode: true });
+  stream._transform = (chunk, enc, cb) => cb(null, chunk);
+  return stream;
 }
 
 describe('gulp-awspublish', function () {
@@ -589,7 +595,7 @@ describe('gulp-awspublish', function () {
     });
 
     it('should sync bucket with published data', function (done) {
-      var stream = through.obj();
+      var stream = createTransform();
 
       stream.pipe(publisher.sync('foo')).pipe(
         collectFiles(function (err, arr) {
@@ -614,7 +620,7 @@ describe('gulp-awspublish', function () {
     });
 
     it('should not delete files that match a whitelist regex', function (done) {
-      var stream = through.obj();
+      var stream = createTransform();
 
       stream.pipe(publisher.sync('', [/foo/])).pipe(
         collectFiles(function (err, arr) {
@@ -637,7 +643,7 @@ describe('gulp-awspublish', function () {
     });
 
     it('should not delete files that match a whitelist string', function (done) {
-      var stream = through.obj();
+      var stream = createTransform();
 
       stream.pipe(publisher.sync('', ['foo/2.txt', 'fooo/3.txt'])).pipe(
         collectFiles(function (err, arr) {
