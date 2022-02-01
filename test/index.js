@@ -1,14 +1,37 @@
 'use strict';
 
+const { Writable } = require('stream');
+
 var fs = require('fs'),
   path = require('path'),
   zlib = require('zlib'),
   chai = require('chai'),
-  es = require('event-stream'),
   Vinyl = require('vinyl'),
   through = require('through2'),
   awspublish = require('../'),
   expect = chai.expect;
+
+// Inspired by writeArray() of event-stream package
+// All files are stored in an array, which is passed to the callback when the stream ends.
+function collectFiles(callback) {
+  const writable = new Writable({ objectMode: true });
+  const files = [];
+  let done = false;
+
+  writable.write = function (file) {
+    files.push(file);
+  };
+  writable.end = function () {
+    done = true;
+    callback(null, files);
+  };
+  writable.destroy = function () {
+    if (done) return;
+    callback(new Error('destroy() before end()'), files);
+  };
+
+  return writable;
+}
 
 describe('gulp-awspublish', function () {
   this.timeout(10000);
@@ -100,7 +123,7 @@ describe('gulp-awspublish', function () {
 
       gzip.write(srcFile);
       gzip.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].path).to.eq('/test/hello.txt.gz');
@@ -134,7 +157,7 @@ describe('gulp-awspublish', function () {
       );
 
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.headers['Content-Type']).to.eq(
@@ -175,7 +198,7 @@ describe('gulp-awspublish', function () {
       );
 
       gzip.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(2);
 
@@ -221,7 +244,7 @@ describe('gulp-awspublish', function () {
       );
 
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(2);
           expect(files[0].s3.path).to.eq('test/hello.txt');
@@ -263,7 +286,7 @@ describe('gulp-awspublish', function () {
       );
 
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.path).to.eq('test/hello3.txt');
@@ -294,7 +317,7 @@ describe('gulp-awspublish', function () {
     it('should update existing file on s3', function (done) {
       var stream = publisher.publish();
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('update');
@@ -321,7 +344,7 @@ describe('gulp-awspublish', function () {
         }
       );
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('skip');
@@ -343,7 +366,7 @@ describe('gulp-awspublish', function () {
     it('should skip file update', function (done) {
       var stream = publisher.publish();
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('skip');
@@ -428,7 +451,7 @@ describe('gulp-awspublish', function () {
     it('should mark file as cached', function (done) {
       var stream = publisher.publish();
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('cache');
@@ -450,7 +473,7 @@ describe('gulp-awspublish', function () {
     it('should force upload', function (done) {
       var stream = publisher.publish({}, { force: true });
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.state).to.eq('update');
@@ -480,7 +503,7 @@ describe('gulp-awspublish', function () {
       );
 
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.path).to.eq('test/simulate.txt');
@@ -503,7 +526,7 @@ describe('gulp-awspublish', function () {
     it('should publish files with unknown extension', function (done) {
       var stream = publisher.publish();
       stream.pipe(
-        es.writeArray(function (err, files) {
+        collectFiles(function (err, files) {
           expect(err).not.to.exist;
           expect(files).to.have.length(1);
           expect(files[0].s3.path).to.eq('test/hello.unknown');
@@ -569,7 +592,7 @@ describe('gulp-awspublish', function () {
       var stream = through.obj();
 
       stream.pipe(publisher.sync('foo')).pipe(
-        es.writeArray(function (err, arr) {
+        collectFiles(function (err, arr) {
           expect(err).to.not.exist;
           var deleted = arr
             .filter(function (file) {
@@ -594,7 +617,7 @@ describe('gulp-awspublish', function () {
       var stream = through.obj();
 
       stream.pipe(publisher.sync('', [/foo/])).pipe(
-        es.writeArray(function (err, arr) {
+        collectFiles(function (err, arr) {
           expect(err).to.not.exist;
 
           var deleted = arr.filter(function (file) {
@@ -617,7 +640,7 @@ describe('gulp-awspublish', function () {
       var stream = through.obj();
 
       stream.pipe(publisher.sync('', ['foo/2.txt', 'fooo/3.txt'])).pipe(
-        es.writeArray(function (err, arr) {
+        collectFiles(function (err, arr) {
           expect(err).to.not.exist;
 
           var deleted = arr.filter(function (file) {
