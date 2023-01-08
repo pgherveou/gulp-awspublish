@@ -391,6 +391,28 @@ describe('gulp-awspublish', function () {
       stream.end();
     });
 
+    it('should put object without head object', function (done) {
+      var stream = publisher.publish({}, { putOnly: true });
+      stream.pipe(
+        collectFiles(function (err, files) {
+          expect(err).not.to.exist;
+          expect(files).to.have.length(1);
+          expect(files[0].s3.state).to.eq('put');
+          done(err);
+        })
+      );
+
+      stream.write(
+        new Vinyl({
+          path: '/test/hello.txt',
+          base: '/',
+          contents: Buffer.from('hello world'),
+        })
+      );
+
+      stream.end();
+    });
+
     it('should have a the correct default cachefile name', function (done) {
       var publisherWithDefaultCache = awspublish.create(credentials),
         stream = publisherWithDefaultCache.publish(),

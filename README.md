@@ -203,6 +203,7 @@ Create a through stream, that push files to s3.
 - header: hash of headers to add or override to existing s3 headers.
 - options: optional additional publishing options
   - force: bypass cache / skip
+  - putOnly: bypass cache and head request (overrides `force`)
   - noAcl: do not set x-amz-acl by default
   - simulate: debugging option to simulate s3 upload
   - createOnly: skip file updates
@@ -212,7 +213,7 @@ Files that go through the stream receive extra properties:
 - s3.path: s3 path
 - s3.etag: file etag
 - s3.date: file last modified date
-- s3.state: publication state (create, update, delete, cache or skip)
+- s3.state: publication state (create, update, put, delete, cache or skip)
 - s3.headers: s3 headers for this file. Defaults headers are:
   - x-amz-acl: public-read
   - Content-Type
@@ -270,7 +271,7 @@ The `aws-sdk` S3 client is exposed to let you do other s3 operations.
 
 ### awspublish.reporter([options])
 
-Create a reporter that logs s3.path and s3.state (delete, create, update, cache, skip).
+Create a reporter that logs s3.path and s3.state (delete, create, update, put, cache, skip).
 
 Available options:
 
