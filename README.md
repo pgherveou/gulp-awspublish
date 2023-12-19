@@ -45,7 +45,6 @@ gulp.task('publish', function () {
       .pipe(awspublish.gzip({ ext: '.gz' }))
 
       // publisher will add Content-Length, Content-Type and headers specified above
-      // If not specified it will set x-amz-acl to public-read by default
       .pipe(publisher.publish(headers))
 
       // create a cache file to speed up consecutive uploads
@@ -97,20 +96,13 @@ gulp.task('publish', function () {
 
 ### Bucket permissions
 
-By default, the plugin works only when public access to the bucket is **not blocked**:
-
-- Block all public access: **Off**
-  - Block public access to buckets and objects granted through new access control lists (ACLs): Off
-  - Block public access to buckets and objects granted through any access control lists (ACLs): Off
-  - Block public access to buckets and objects granted through new public bucket policies: Off
-  - Block public and cross-account access to buckets and objects through any public bucket policies: Off
-
-When dealing with a private bucket, make sure to pass the option `{ noAcl: true }` or a value for the `x-amz-acl` header:
+By default, if no `x-amz-acl` header is passed, the uploaded object will inherit from the bucket setting. If you have specific requirements for the uploaded object, make sure to pass a value for the `x-amz-acl` header:
 
 ```js
-publisher.publish({}, { noAcl: true });
 publisher.publish({ 'x-amz-acl': 'something' });
 ```
+
+See [canned ACL on AWS documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#CannedACL).
 
 ## Testing
 
@@ -204,7 +196,6 @@ Create a through stream, that push files to s3.
 - options: optional additional publishing options
   - force: bypass cache / skip
   - putOnly: bypass cache and head request (overrides `force`)
-  - noAcl: do not set x-amz-acl by default
   - simulate: debugging option to simulate s3 upload
   - createOnly: skip file updates
 
@@ -215,7 +206,6 @@ Files that go through the stream receive extra properties:
 - s3.date: file last modified date
 - s3.state: publication state (create, update, put, delete, cache or skip)
 - s3.headers: s3 headers for this file. Defaults headers are:
-  - x-amz-acl: public-read
   - Content-Type
   - Content-Length
 

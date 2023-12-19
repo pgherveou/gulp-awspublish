@@ -258,7 +258,7 @@ describe('gulp-awspublish', function () {
           expect(files[0].s3.headers['Cache-Control']).to.eq(
             headers['Cache-Control']
           );
-          expect(files[0].s3.headers['x-amz-acl']).to.eq('public-read');
+          expect(files[0].s3.headers).not.contain.keys('x-amz-acl');
           expect(files[0].s3.headers['Content-Type']).to.eq(
             'text/plain; charset=utf-8'
           );
@@ -281,8 +281,8 @@ describe('gulp-awspublish', function () {
       stream.end();
     });
 
-    it('should not send s3 header x-amz-acl if option {noAcl: true}', function (done) {
-      var stream = publisher.publish({}, { noAcl: true });
+    it('should not send s3 header x-amz-acl by default', function (done) {
+      var stream = publisher.publish({});
       stream.write(
         new Vinyl({
           path: '/test/hello3.txt',
