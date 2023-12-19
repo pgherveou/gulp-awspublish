@@ -15,34 +15,34 @@ npm install --save-dev gulp-awspublish
 Then, add it to your `gulpfile.js`:
 
 ```javascript
-var awspublish = require("gulp-awspublish");
+var awspublish = require('gulp-awspublish');
 
-gulp.task("publish", function() {
+gulp.task('publish', function () {
   // create a new publisher using S3 options
   // http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property
   var publisher = awspublish.create(
     {
-      region: "your-region-id",
+      region: 'your-region-id',
       params: {
-        Bucket: "..."
-      }
+        Bucket: '...',
+      },
     },
     {
-      cacheFileName: "your-cache-location"
+      cacheFileName: 'your-cache-location',
     }
   );
 
   // define custom headers
   var headers = {
-    "Cache-Control": "max-age=315360000, no-transform, public"
+    'Cache-Control': 'max-age=315360000, no-transform, public',
     // ...
   };
 
   return (
     gulp
-      .src("./public/*.js")
+      .src('./public/*.js')
       // gzip, Set Content-Encoding headers and add .gz extension
-      .pipe(awspublish.gzip({ ext: ".gz" }))
+      .pipe(awspublish.gzip({ ext: '.gz' }))
 
       // publisher will add Content-Length, Content-Type and headers specified above
       // If not specified it will set x-amz-acl to public-read by default
@@ -109,7 +109,7 @@ When dealing with a private bucket, make sure to pass the option `{ noAcl: true 
 
 ```js
 publisher.publish({}, { noAcl: true });
-publisher.publish({ "x-amz-acl": "something" });
+publisher.publish({ 'x-amz-acl': 'something' });
 ```
 
 ## Testing
@@ -169,28 +169,28 @@ Hardcoded credentials (**Note**: We recommend you **not** hard-code credentials 
 
 ```javascript
 var publisher = awspublish.create({
-  region: "your-region-id",
+  region: 'your-region-id',
   params: {
-    Bucket: "..."
+    Bucket: '...',
   },
   credentials: {
-    accessKeyId: "akid",
-    secretAccessKey: "secret"
-  }
+    accessKeyId: 'akid',
+    secretAccessKey: 'secret',
+  },
 });
 ```
 
 Using a profile by name from `~/.aws/credentials`:
 
 ```javascript
-var AWS = require("aws-sdk");
+var AWS = require('aws-sdk');
 
 var publisher = awspublish.create({
-  region: "your-region-id",
+  region: 'your-region-id',
   params: {
-    Bucket: "..."
+    Bucket: '...',
   },
-  credentials: new AWS.SharedIniFileCredentials({ profile: "myprofile" })
+  credentials: new AWS.SharedIniFileCredentials({ profile: 'myprofile' }),
 });
 ```
 
@@ -242,9 +242,9 @@ e.g.
 // only directory bar will be synced
 // files in folder /foo/bar and file baz.txt will not be removed from the bucket despite not being in your local folder
 gulp
-  .src("./public/*")
+  .src('./public/*')
   .pipe(publisher.publish())
-  .pipe(publisher.sync("bar", [/^foo\/bar/, "baz.txt"]))
+  .pipe(publisher.sync('bar', [/^foo\/bar/, 'baz.txt']))
   .pipe(awspublish.reporter());
 ```
 
@@ -253,7 +253,7 @@ gulp
 ```js
 // this will publish and sync bucket files with the one in your public directory
 gulp
-  .src("./public/*")
+  .src('./public/*')
   .pipe(publisher.publish())
   .pipe(publisher.sync())
   .pipe(awspublish.reporter());
@@ -280,12 +280,12 @@ Available options:
 ```js
 // this will publish,sync bucket files and print created, updated and deleted files
 gulp
-  .src("./public/*")
+  .src('./public/*')
   .pipe(publisher.publish())
   .pipe(publisher.sync())
   .pipe(
     awspublish.reporter({
-      states: ["create", "update", "delete"]
+      states: ['create', 'update', 'delete'],
     })
   );
 ```
@@ -300,11 +300,11 @@ You can use `gulp-rename` to rename your files on s3
 // see examples/rename.js
 
 gulp
-  .src("examples/fixtures/*.js")
+  .src('examples/fixtures/*.js')
   .pipe(
-    rename(function(path) {
-      path.dirname += "/s3-examples";
-      path.basename += "-s3";
+    rename(function (path) {
+      path.dirname += '/s3-examples';
+      path.basename += '-s3';
     })
   )
   .pipe(publisher.publish())
@@ -320,10 +320,10 @@ gulp
 You can use `concurrent-transform` to upload files in parallel to your amazon bucket
 
 ```js
-var parallelize = require("concurrent-transform");
+var parallelize = require('concurrent-transform');
 
 gulp
-  .src("examples/fixtures/*.js")
+  .src('examples/fixtures/*.js')
   .pipe(parallelize(publisher.publish(), 10))
   .pipe(awspublish.reporter());
 ```
@@ -335,9 +335,9 @@ to upload two streams in parallel, allowing `sync` to work with mixed file
 types
 
 ```js
-var merge = require("merge-stream");
-var gzip = gulp.src("public/**/*.js").pipe(awspublish.gzip());
-var plain = gulp.src(["public/**/*", "!public/**/*.js"]);
+var merge = require('merge-stream');
+var gzip = gulp.src('public/**/*.js').pipe(awspublish.gzip());
+var plain = gulp.src(['public/**/*', '!public/**/*.js']);
 
 merge(gzip, plain)
   .pipe(publisher.publish())

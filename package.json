@@ -21,7 +21,7 @@
     "url": "git://github.com/pgherveou/gulp-awspublish.git"
   },
   "scripts": {
-    "lint": "prettier --write **/*.js && eslint --fix .",
+    "lint": "prettier --write **/*.{js,md} && eslint --fix .",
     "pretest": "npm run lint",
     "test": "mocha"
   },
