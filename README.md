@@ -70,27 +70,39 @@ gulp.task('publish', function () {
 
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["s3:ListBucket"],
-      "Resource": ["arn:aws:s3:::BUCKETNAME"]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:PutObjectAcl",
-        "s3:GetObject",
-        "s3:GetObjectAcl",
-        "s3:DeleteObject",
-        "s3:ListMultipartUploadParts",
-        "s3:AbortMultipartUpload"
-      ],
-      "Resource": ["arn:aws:s3:::BUCKETNAME/*"]
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::<ACCOUNT_NUMBER>:root"
+            },
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::test-ladsh"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::<ACCOUNT_NUMBER>:root"
+            },
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:GetObject",
+                "s3:GetObjectAcl",
+                "s3:DeleteObject",
+                "s3:ListMultipartUploadParts",
+                "s3:AbortMultipartUpload"
+            ],
+            "Resource": [
+                "arn:aws:s3:::test-ladsh/*"
+            ]
+        }
+    ]
 }
 ```
 
